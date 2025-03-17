@@ -1,12 +1,26 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { 
+    Router,
+    RouterOutlet, 
+  } from '@angular/router' 
+import { TitleService } from './services/title.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [
+    RouterOutlet,
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'optimatincorporation';
+
+  private titleService = inject(TitleService)
+ 
+  constructor() { }
+
+  ngOnInit(): void {
+    this.titleService.init()
+  }
 }

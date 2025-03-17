@@ -1,0 +1,52 @@
+<div class="navbar-area">
+    <div class="mobile-nav">
+        <a routerLink="/" class="logo"><img src="assets/img/footer-logo.png" alt="Logo"></a>
+    </div>
+
+    <div class="main-nav">
+        <div class="container">
+            <nav class="navbar navbar-expand-md navbar-light ">
+                <a class="navbar-brand" routerLink="/"><img src="assets/img/logo.png" alt="Logo"
+                        style="width: 150px; height: auto;"></a>
+
+                <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
+                    <ul class="navbar-nav m-auto">
+                        <li class="nav-item">
+                            <a routerLink="/" class="nav-link" routerLinkActive="active"
+                                [routerLinkActiveOptions]="{exact: true}">Acceuil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a routerLink="/about" class="nav-link" routerLinkActive="active"
+                                [routerLinkActiveOptions]="{exact: true}">Qui sommes-nous ?</a>
+                        </li>
+                        <li class="nav-item">
+                            <a routerLink="/services" class="nav-link" routerLinkActive="active"
+                                [routerLinkActiveOptions]="{exact: true}">Services </a>
+                        </li>
+                        <li class="nav-item">
+                            <a routerLink="/products" class="nav-link" routerLinkActive="active"
+                                [routerLinkActiveOptions]="{exact: true}">Produits</a>
+                        </li>
+                        <li class="nav-item">
+                            <a routerLink="/blog" class="nav-link" routerLinkActive="active"[routerLinkActiveOptions]="{exact: true}">
+                                Blog
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a routerLink="/contact" class="nav-link" routerLinkActive="active"
+                                [routerLinkActiveOptions]="{exact: true}">Contact</a>
+                        </li>
+                    </ul>
+
+                    <div class="cart-area">
+                        <a routerLink="/cart"><i class='bx bx-cart'></i></a>
+                    </div>
+
+                    <div class="menu-btn">
+                        <a href="tel:+243821822722" class="phone-btn"><i class='bx bxs-phone'></i>+243 821 822 722</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
