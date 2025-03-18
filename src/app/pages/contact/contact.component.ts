@@ -23,6 +23,10 @@ export class ContactComponent {
     subject: ''
   };
 
+  sendEmail() {
+    
+  }
+
   // async sendEmail() {
   //   const { text, from, subject } = this.emailForm; // Use form data
   //   const client = new SMTPClient({
