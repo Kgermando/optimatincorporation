@@ -23,40 +23,31 @@
     <div class="container">
         <div class="contact-wrap pt-45">
             <div class="contact-wrap-form">
-                 <form id="contactForm">
+                 <form (ngSubmit)="sendEmail()">
                      <div class="row">
                          <div class="col-lg-6 col-sm-6">
                             <div class="form-group">
-                                <input type="text" name="name" id="name" class="form-control" required placeholder="Your Name">
+                                <label for="from">Votre adresse email:</label>
+                                <input id="from" type="email" [(ngModel)]="emailForm.from" name="from" required class="form-control" placeholder="Votre adresse email">
                             </div>
-                         </div>
+                         </div>  
 
                          <div class="col-lg-6 col-sm-6">
                             <div class="form-group">
-                                <input type="email" name="email" id="email" class="form-control" required placeholder="Your Email">
-                            </div>
-                         </div>
-
-                         <div class="col-lg-6 col-sm-6">
-                            <div class="form-group">
-                                <input type="text" name="phone_number" id="phone_number" required class="form-control" placeholder="Your Phone">
-                            </div>
-                         </div>
-
-                         <div class="col-lg-6 col-sm-6">
-                            <div class="form-group">
-                                <input type="text" name="msg_subject" id="msg_subject" class="form-control" required placeholder="Your Subject">
+                                <label for="subject">Sujet:</label>
+                                <input id="subject" type="text" [(ngModel)]="emailForm.subject" name="subject" placeholder="Sujet de votre message" required class="form-control">
                             </div>
                          </div>
 
                          <div class="col-lg-12 col-md-12">
                             <div class="form-group">
-                                <textarea name="message" class="form-control" id="message" cols="30" rows="8" required placeholder="Your Message"></textarea>
+                                <label for="text">Message:</label>
+                                <textarea id="text" [(ngModel)]="emailForm.text" name="text" required class="form-control" cols="30" rows="8" placeholder="Votre Message"></textarea>
                             </div>
                          </div>
 
                          <div class="col-lg-12 col-md-12 text-center">
-                            <button type="submit" class="default-btn page-btn text-center">Envoyez un Message</button>
+                            <button type="submit" class="default-btn page-btn text-center">Send Email</button>
                          </div>
                      </div>
                  </form>
