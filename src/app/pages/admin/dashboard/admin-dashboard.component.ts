@@ -1,0 +1,251 @@
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../auth.service';
+
+@Component({
+  selector: 'app-admin-dashboard',
+  standalone: true,
+  imports: [CommonModule, RouterModule],
+  template: `
+    <div class="admin-layout">
+      <!-- Sidebar -->
+      <nav class="admin-sidebar">
+        <div class="sidebar-header">
+          <h3>Admin Panel</h3>
+        </div>
+        <ul class="sidebar-menu">
+          <li>
+            <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+              <i class='bx bx-tachometer'></i>
+              Tableau de bord
+            </a>
+          </li>
+          <li>
+            <a routerLink="/admin/blogs" routerLinkActive="active">
+              <i class='bx bx-news'></i>
+              Articles de blog
+            </a>
+          </li>
+          <li>
+            <a (click)="logout()" class="logout-btn">
+              <i class='bx bx-log-out'></i>
+              Déconnexion
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="admin-main">
+        <div class="admin-header">
+          <h1>Tableau de bord</h1>
+          <div class="admin-user">
+            <span *ngIf="currentUser">Bienvenue, {{ currentUser.name }}</span>
+          </div>
+        </div>
+
+        <div class="admin-content">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class='bx bx-news'></i>
+              </div>
+              <div class="stat-content">
+                <h3>Articles de blog</h3>
+                <p>Gérer les articles</p>
+                <a routerLink="/admin/blogs" class="btn btn-primary">Voir les articles</a>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class='bx bx-plus'></i>
+              </div>
+              <div class="stat-content">
+                <h3>Nouvel article</h3>
+                <p>Créer un nouvel article</p>
+                <a routerLink="/admin/blogs/create" class="btn btn-success">Créer un article</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  `,
+  styles: [`
+    .admin-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .admin-sidebar {
+      width: 250px;
+      background: #2c3e50;
+      color: white;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 20px;
+      border-bottom: 1px solid #34495e;
+    }
+
+    .sidebar-header h3 {
+      margin: 0;
+      color: white;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-menu li {
+      border-bottom: 1px solid #34495e;
+    }
+
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      color: #bdc3c7;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background: #34495e;
+      color: white;
+    }
+
+    .sidebar-menu i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+
+    .logout-btn {
+      cursor: pointer;
+    }
+
+    .admin-main {
+      flex: 1;
+      margin-left: 250px;
+      background: #f8f9fa;
+    }
+
+    .admin-header {
+      background: white;
+      padding: 20px 30px;
+      border-bottom: 1px solid #e9ecef;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-header h1 {
+      margin: 0;
+      color: #2c3e50;
+    }
+
+    .admin-user span {
+      color: #6c757d;
+    }
+
+    .admin-content {
+      padding: 30px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 8px;
+      padding: 25px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+    }
+
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #3498db;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20px;
+    }
+
+    .stat-icon i {
+      font-size: 24px;
+      color: white;
+    }
+
+    .stat-content h3 {
+      margin: 0 0 8px 0;
+      color: #2c3e50;
+    }
+
+    .stat-content p {
+      margin: 0 0 15px 0;
+      color: #6c757d;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn-primary {
+      background: #3498db;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2980b9;
+    }
+
+    .btn-success {
+      background: #27ae60;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #229954;
+    }
+  `]
+})
+export class AdminDashboardComponent implements OnInit {
+  currentUser: any = null;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.authService.authState$.subscribe(authState => {
+      this.currentUser = authState.user;
+    });
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/admin/login']);
+  }
+}

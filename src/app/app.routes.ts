@@ -11,141 +11,120 @@ import { ServiceDetailComponent } from './pages/services-page/service-detail/ser
 import { ProductsComponent } from './pages/products/products.component';
 import { BlogComponent } from './pages/blog/blog.component';
 import { BlogDetailComponent } from './pages/blog/blog-detail/blog-detail.component';
+import { AdminLoginComponent } from './pages/admin/login/admin-login.component';
+import { AdminDashboardComponent } from './pages/admin/dashboard/admin-dashboard.component';
+import { AdminBlogListComponent } from './pages/admin/blog-list/admin-blog-list.component';
+import { AdminBlogFormComponent } from './pages/admin/blog-form/admin-blog-form.component';
+import { AuthGuard } from './pages/admin/auth.guard';
 
 export const routes: Routes = [
+    { path: '', component: HomeComponent },
+    { path: 'about', component: AboutComponent },
+    { path: 'contact', component: ContactComponent },
+    { path: 'error', component: ErrorComponent },
+    { path: 'cart', component: CartComponent },
+    { path: 'checkout', component: CheckoutComponent },
+    { path: 'products/:id', component: ProductDetailComponent },
+    { path: 'services', component: ServicesPageComponent },
+    { path: 'services/:id', component: ServiceDetailComponent },
+    { path: 'products', component: ProductsComponent },
+    { path: 'blog', component: BlogComponent },
+    { path: 'blog/:id', component: BlogDetailComponent },
+    // Admin routes
     {
-        path: '', redirectTo: '/acceuil', pathMatch: 'full'
-    },
-    {
-        path: 'acceuil', component: HomeComponent,
+        path: 'admin/login', 
+        component: AdminLoginComponent,
         data: {
-            title: 'Acceuil',
+            title: 'Connexion Admin',
             metatags: {
-                description: 'Acceuil de notre site',
-                keywords: 'acceuil, home, site',
-                robots: 'index, follow'
+                description: 'Connexion administration',
+                keywords: 'admin, connexion',
+                robots: 'noindex, nofollow'
             }
         }
     },
     {
-        path: 'about', component: AboutComponent,
+        path: 'admin/dashboard', 
+        component: AdminDashboardComponent,
+        canActivate: [AuthGuard],
         data: {
-            title: 'A propos',
+            title: 'Tableau de bord Admin',
             metatags: {
-                description: 'A propos de notre site',
-                keywords: 'a propos, about, site',
-                robots: 'index, follow'
-            }
-        },
-    },
-    {
-        path: 'contact', component: ContactComponent,
-        data: {
-            title: 'Contact',
-            metatags: {
-                description: 'Contactez nous',
-                keywords: 'contact, site',
-                robots: 'index, follow'
-            }
-        },
-    },
-    {
-        path: 'cart', component: CartComponent,
-        data: {
-            title: 'Panier',
-            metatags: {
-                description: 'Votre panier',
-                keywords: 'panier, cart',
-                robots: 'index, follow'
-            }
-        },
-    },
-    {
-        path: 'checkout', component: CheckoutComponent,
-        data: {
-            title: 'Commandes',
-            metatags: {
-                description: 'Commandes',
-                keywords: 'commander, checkout',
-                robots: 'index, follow'
-            }
-        },
-    },
-    {
-        path: 'services', component: ServicesPageComponent,
-        data: {
-            title: 'Services',
-            metatags: {
-                description: 'Liste des services',
-                keywords: 'services, services',
-                robots: 'index, follow'
-            }
-        },
-    },
-    {
-        path: 'service-details', component: ServiceDetailComponent,
-        data: {
-            title: 'Détail du service',
-            metatags: {
-                description: 'Détail du service',
-                keywords: 'detail, service',
-                robots: 'index, follow'
-            }
-        },
-    },
-    {
-        path: 'products', component: ProductsComponent,
-        data: {
-            title: 'Produits',
-            metatags: {
-                description: 'Liste des produits',
-                keywords: 'produits, products',
-                robots: 'index, follow'
-            }
-        },
-    },
-    {
-        path: 'products/:title/detail', component: ProductDetailComponent,
-        data: {
-            title: 'Détail du produit',
-            metatags: {
-                description: 'Détail du produit',
-                keywords: 'detail, produit',
-                robots: 'index, follow'
-            }
-        },
-    },
-    { path: 'blog', component: BlogComponent,
-        data: {
-            title: 'Blog',
-            metatags: {
-                description: 'Liste des articles',
-                keywords: 'blog, articles',
-                robots: 'index, follow'
-            }
-        },
-     },
-    { path: 'blog-details', component: BlogDetailComponent,
-        data: {
-            title: 'Détail de l\'article',
-            metatags: {
-                description: 'Détail de l\'article',
-                keywords: 'detail, article',
-                robots: 'index, follow'
-            }
-        },
-     },
-
-    
-    {
-        path: '**', component: ErrorComponent,
-        data: {
-            title: 'Erreur 404',
-            metatags: {
-                description: 'Page introuvable',
-                keywords: 'erreur, 404, page',
+                description: 'Tableau de bord administration',
+                keywords: 'admin, dashboard',
                 robots: 'noindex, nofollow'
             }
-        },
+        }
     },
+    {
+        path: 'admin/blogs', 
+        component: AdminBlogListComponent,
+        canActivate: [AuthGuard],
+        data: {
+            title: 'Gestion des blogs',
+            metatags: {
+                description: 'Gestion des articles de blog',
+                keywords: 'admin, blog, gestion',
+                robots: 'noindex, nofollow'
+            }
+        }
+    },
+    {
+        path: 'admin/blogs/create', 
+        component: AdminBlogFormComponent,
+        canActivate: [AuthGuard],
+        data: {
+            title: 'Créer un article',
+            metatags: {
+                description: 'Créer un nouvel article de blog',
+                keywords: 'admin, blog, créer',
+                robots: 'noindex, nofollow'
+            }
+        }
+    },
+    {
+        path: 'admin/blogs/:id/edit', 
+        component: AdminBlogFormComponent,
+        canActivate: [AuthGuard],
+        data: {
+            title: 'Modifier un article',
+            metatags: {
+                description: 'Modifier un article de blog',
+                keywords: 'admin, blog, modifier',
+                robots: 'noindex, nofollow'
+            }
+        }
+    },
+    {
+        path: 'admin', 
+        redirectTo: '/admin/dashboard', 
+        pathMatch: 'full'
+    },
+    {
+        path: 'admin/blogs/create', 
+        component: AdminBlogFormComponent,
+        canActivate: [AuthGuard],
+        data: {
+            title: 'Créer un article',
+            metatags: {
+                description: 'Créer un nouvel article de blog',
+                keywords: 'admin, blog, créer',
+                robots: 'noindex, nofollow'
+            }
+        }
+    },
+    {
+        path: 'admin/blogs/:id/edit', 
+        component: AdminBlogFormComponent,
+        canActivate: [AuthGuard],
+        data: {
+            title: 'Modifier un article',
+            metatags: {
+                description: 'Modifier un article de blog',
+                keywords: 'admin, blog, modifier',
+                robots: 'noindex, nofollow'
+            }
+        }
+    },
+    { path: '**', redirectTo: '/error' }
 ];

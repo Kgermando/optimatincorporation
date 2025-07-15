@@ -17,36 +17,52 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8">
-                <div class="blog-dtls-content">
+                <!-- État de chargement -->
+                <div *ngIf="loading" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+
+                <!-- État d'erreur -->
+                <div *ngIf="error && !loading" class="alert alert-danger text-center" role="alert">
+                    {{ error }}
+                </div>
+
+                <!-- Contenu du blog -->
+                <div *ngIf="blog && !loading" class="blog-dtls-content">
                     <div class="blog-dtls-img">
-                        <img src="assets/img/blog/blog-dtls.jpg" alt="Blog Images">
+                        <img [src]="getImageUrl(blog.files)" [alt]="blog.title" 
+                             onerror="this.src='assets/img/blog/blog-dtls.jpg'">
                     </div>
 
                     <div class="blog-text">
-                        <h2>Keep Your Print Great</h2>
+                        <h2>{{ blog.title }}</h2>
                         <ul>
-                            <li><a routerLink="/"><i class='bx bxs-user'></i> Admin</a></li>
-                            <li><a routerLink="/"><i class='bx bx-calendar-alt'></i> 18 May 2024</a></li>
+                            <li><a routerLink="/"><i class='bx bxs-user'></i> {{ blog.signature || 'Admin' }}</a></li>
+                            <li><a routerLink="/"><i class='bx bx-calendar-alt'></i> {{ formatDate(blog.created || blog.CreatedAt || blog.created_at) }}</a></li>
+                            <li *ngIf="blog.views"><i class='bx bx-show'></i> {{ blog.views }} vues</li>
                         </ul>
-                        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet.</p>
-                        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look</p>
-                        <blockquote class="boxicon-quote">
-                            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellendus aliquid praesentium eveniet illum asperiores, quidem, ipsum voluptatum numquam ducimus nisi exercitationem dolorum facilis Repellendus aliquid praesentium eveniet illum asperiores.</p>
-                        </blockquote>
-                        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum.</p>
+                        
+                        <!-- Résumé -->
+                        <div *ngIf="blog.resume" class="blog-resume">
+                            <p><strong>{{ blog.resume }}</strong></p>
+                        </div>
+
+                        <!-- Contenu -->
+                        <div class="blog-content" [innerHTML]="blog.content"></div>
+
+                        <!-- Mots-clés -->
+                        <div *ngIf="getKeywords()" class="blog-keywords mt-4">
+                            <p><strong>Mots-clés:</strong> {{ getKeywords() }}</p>
+                        </div>
                     </div>
 
-                    <div class="row bolg-gallery">
-                        <div class="bolg-gallery-item">
-                            <img src="assets/img/blog/blog6.jpg" alt="Blog Images">
-                        </div>
-
-                        <div class="bolg-gallery-item">
-                            <img src="assets/img/blog/blog4.jpg" alt="Blog Images">
-                        </div>
-
-                        <div class="bolg-gallery-item">
-                            <img src="assets/img/blog/blog5.jpg" alt="Blog Images">
+                    <!-- Galerie d'images supplémentaires -->
+                    <div *ngIf="blog.files && blog.files.length > 1" class="row bolg-gallery">
+                        <div class="bolg-gallery-item" *ngFor="let file of blog.files.slice(1)">
+                            <img [src]="baseImageUrl + file" [alt]="blog.title" 
+                                 onerror="this.src='assets/img/blog/blog1.jpg'">
                         </div>
                     </div>
                     <h3>Top 10 Design Trends 2024</h3>

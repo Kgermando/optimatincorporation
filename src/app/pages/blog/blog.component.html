@@ -22,111 +22,73 @@
         </div>
 
         <div class="row pt-45">
-            <div class="col-lg-4 col-md-6">
+            <div class="col-12" *ngIf="loading">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12" *ngIf="error && !loading">
+                <div class="alert alert-danger text-center" role="alert">
+                    {{ error }}
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6" *ngFor="let blog of blogs">
                 <div class="blog-card">
-                    <a routerLink="/blog-details"><img src="assets/img/blog/blog1.jpg" alt="Blog Images"></a>
+                    <a [routerLink]="['/blog-details', blog.id]">
+                        <img [src]="getImageUrl(blog.files)" [alt]="blog.title" 
+                             onerror="this.src='assets/img/blog/blog1.jpg'">
+                    </a>
                     
                     <div class="blog-content">
-                        <a routerLink="/blog-details"><h3>Work Once Print 100+</h3></a>
+                        <a [routerLink]="['/blog-details', blog.id]">
+                            <h3>{{ blog.title }}</h3>
+                        </a>
                         <ul class="blog-admin">
-                            <li><a routerLink="/"><i class='bx bxs-user'></i>Admin</a></li>
-                            <li><i class='bx bx-calendar-alt'></i> 18 May 2024</li>
+                            <li><a routerLink="/"><i class='bx bxs-user'></i>{{ blog.signature || 'Admin' }}</a></li>
+                            <li><i class='bx bx-calendar-alt'></i> {{ formatDate(blog.created || blog.CreatedAt || blog.created_at) }}</li>
                         </ul>
-                        <p>Lorem ipsum dolor sit amet, consect is etur adipiscing elit.</p>
-                        <a routerLink="/blog-details" class="read-more-btn">Read More <i class='bx bxs-chevrons-right'></i></a>
+                        <p>{{ blog.resume || 'Découvrez cet article passionnant...' }}</p>
+                        <a [routerLink]="['/blog-details', blog.id]" class="read-more-btn">
+                            Lire plus <i class='bx bxs-chevrons-right'></i>
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-card">
-                    <a routerLink="/blog-details"><img src="assets/img/blog/blog2.jpg" alt="Blog Images"></a>
-                    
-                    <div class="blog-content">
-                        <a routerLink="/blog-details"><h3>Keep Your Print Great</h3></a>
-                        <ul class="blog-admin">
-                            <li><a routerLink="/"><i class='bx bxs-user'></i> Admin</a></li>
-                            <li><i class='bx bx-calendar-alt' ></i> 18 May 2024</li>
-                        </ul>
-                        <p>Lorem ipsum dolor sit amet, consect is etur adipiscing elit.</p>
-                        <a routerLink="/blog-details" class="read-more-btn">Read More <i class='bx bxs-chevrons-right'></i></a>
-                    </div>
+            <div class="col-lg-12" *ngIf="!loading && blogs.length === 0 && !error">
+                <div class="text-center py-5">
+                    <h4>Aucun article trouvé</h4>
+                    <p>Il n'y a pas encore d'articles de blog disponibles.</p>
                 </div>
             </div>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-card">
-                    <a routerLink="/blog-details"><img src="assets/img/blog/blog3.jpg" alt="Blog Images"></a>
-                    
-                    <div class="blog-content">
-                        <a routerLink="/blog-details"><h3>Digital Print is Science</h3></a>
-                        <ul class="blog-admin">
-                            <li><a routerLink="/"><i class='bx bxs-user'></i> Admin</a></li>
-                            <li><i class='bx bx-calendar-alt' ></i> 18 May 2024</li>
-                        </ul>
-                        <p>Lorem ipsum dolor sit amet, consect is etur adipiscing elit.</p>
-                        <a routerLink="/blog-details" class="read-more-btn">Read More <i class='bx bxs-chevrons-right'></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-card">
-                    <a routerLink="/blog-details"><img src="assets/img/blog/blog4.jpg" alt="Blog Images"></a>
-                    
-                    <div class="blog-content">
-                        <a routerLink="/blog-details"><h3>Print Banner in Industry</h3></a>
-                        <ul class="blog-admin">
-                            <li><a routerLink="/"><i class='bx bxs-user'></i> Admin</a></li>
-                            <li><i class='bx bx-calendar-alt' ></i> 18 May 2024</li>
-                        </ul>
-                        <p>Lorem ipsum dolor sit amet, consect is etur adipiscing elit.</p>
-                        <a routerLink="/blog-details" class="read-more-btn">Read More <i class='bx bxs-chevrons-right'></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-card">
-                    <a routerLink="/blog-details"><img src="assets/img/blog/blog5.jpg" alt="Blog Images"></a>
-                    
-                    <div class="blog-content">
-                        <a routerLink="/blog-details"><h3>Choose Color in Package</h3></a>
-                        <ul class="blog-admin">
-                            <li><a routerLink="/"><i class='bx bxs-user'></i> Admin</a></li>
-                            <li><i class='bx bx-calendar-alt' ></i> 18 May 2024</li>
-                        </ul>
-                        <p>Lorem ipsum dolor sit amet, consect is etur adipiscing elit.</p>
-                        <a routerLink="/blog-details" class="read-more-btn">Read More <i class='bx bxs-chevrons-right'></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-card">
-                    <a routerLink="/blog-details"><img src="assets/img/blog/blog6.jpg" alt="Blog Images"></a>
-                    
-                    <div class="blog-content">
-                        <a routerLink="/blog-details"><h3>T-shirt Design Trends 2024 </h3></a>
-                        <ul class="blog-admin">
-                            <li><a routerLink="/"><i class='bx bxs-user'></i> Admin</a></li>
-                            <li><i class='bx bx-calendar-alt'></i> 18 May 2024</li>
-                        </ul>
-                        <p>Lorem ipsum dolor sit amet, consect is etur adipiscing elit.</p>
-                        <a routerLink="/blog-details" class="read-more-btn">Read More <i class='bx bxs-chevrons-right'></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-12">
+            <div class="col-lg-12" *ngIf="totalPages > 1">
                 <div class="pagination-area">
                     <nav aria-label="Page navigation example text-center">
                         <ul class="pagination">
-                            <li class="page-item"><a class="page-link page-links" routerLink="/blog"><i class='bx bx-chevrons-left'></i></a></li>
-                            <li class="page-item current"><a class="page-link" routerLink="/blog">1</a></li>
-                            <li class="page-item"><a class="page-link" routerLink="/blog">2</a></li>
-                            <li class="page-item"><a class="page-link" routerLink="/blog">3</a></li>
-                            <li class="page-item"><a class="page-link" routerLink="/blog"><i class='bx bx-chevrons-right'></i></a></li>
+                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                <a class="page-link page-links" (click)="onPageChange(currentPage - 1)" 
+                                   [style.cursor]="currentPage === 1 ? 'not-allowed' : 'pointer'">
+                                    <i class='bx bx-chevrons-left'></i>
+                                </a>
+                            </li>
+                            
+                            <li class="page-item" *ngFor="let page of generatePages()" 
+                                [class.current]="page === currentPage">
+                                <a class="page-link" (click)="onPageChange(page)" 
+                                   [style.cursor]="'pointer'">{{ page }}</a>
+                            </li>
+                            
+                            <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                <a class="page-link" (click)="onPageChange(currentPage + 1)" 
+                                   [style.cursor]="currentPage === totalPages ? 'not-allowed' : 'pointer'">
+                                    <i class='bx bx-chevrons-right'></i>
+                                </a>
+                            </li>
                         </ul>
                     </nav>
                 </div>

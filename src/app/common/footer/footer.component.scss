@@ -1,0 +1,43 @@
+// Admin access in footer
+.admin-access {
+  border-top: 1px solid #495057;
+  padding-top: 15px;
+  margin-top: 20px;
+
+  .admin-login-link {
+    display: inline-flex;
+    align-items: center;
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: rgba(108, 117, 125, 0.1);
+
+    i {
+      margin-right: 8px;
+      font-size: 1rem;
+    }
+
+    &:hover {
+      color: #007bff;
+      background-color: rgba(0, 123, 255, 0.1);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .admin-access {
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 10px;
+
+    .admin-login-link {
+      font-size: 0.85rem;
+      padding: 6px 10px;
+    }
+  }
+}
