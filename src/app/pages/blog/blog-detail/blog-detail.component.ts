@@ -42,12 +42,13 @@ export class BlogDetailComponent implements OnInit {
     this.loading = true;
     this.error = null;
     
-    this.blogsService.getBlogById(id).subscribe({
+    this.blogsService.get(id).subscribe({
       next: (blog) => {
         this.blog = blog;
         this.loading = false;
+
         // Incrémenter les vues
-        this.blogsService.incrementViews(id).subscribe();
+        // this.blogsService.incrementViews(id).subscribe();
       },
       error: (error) => {
         console.error('Error loading blog:', error);

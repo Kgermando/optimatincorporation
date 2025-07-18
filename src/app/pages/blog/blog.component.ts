@@ -19,81 +19,87 @@ import { environment } from '../../../environments/environment';
   styleUrl: './blog.component.scss'
 })
 export class BlogComponent implements OnInit {
-  blogs: BlogModel[] = [];
+  blogs: BlogModel[] = []
   currentPage = 1;
-  totalPages = 1;
-  limit = 6;
+  totalPages = 0;
+  itemsPerPage = 10;
+
   loading = false;
   error: string | null = null;
-  baseImageUrl = environment.urlFile;
 
-  constructor(private blogsService: BlogsService) {}
+  constructor(private blogService: BlogsService) { }
+
 
   ngOnInit(): void {
-    this.loadBlogs();
+    this.blogService.refreshDataList$.subscribe(() => {
+      this.fetchData();
+    });
+    this.fetchData();
   }
 
-  loadBlogs(page: number = 1): void {
+  fetchData() {
     this.loading = true;
     this.error = null;
     
-    this.blogsService.getBlogs(page, this.limit).subscribe({
-      next: (response) => {
-        this.blogs = response.data;
-        this.currentPage = response.page;
-        this.totalPages = response.totalPages;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error loading blogs:', error);
-        this.error = 'Erreur lors du chargement des articles';
-        this.loading = false;
-      }
-    });
+    this.blogService.getPaginated(this.currentPage, this.itemsPerPage)
+      .subscribe({
+        next: (response) => {
+          this.blogs = response.data;
+          this.totalPages = response.pagination.total_pages;
+          this.loading = false;
+        },
+        error: (error) => {
+          this.error = 'Erreur lors du chargement des articles';
+          this.loading = false;
+          console.error('Error fetching blogs:', error);
+        }
+      });
   }
 
-  onPageChange(page: number): void {
-    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
-      this.loadBlogs(page);
+  onPageChange(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.fetchData();
     }
+  }
+
+  generatePages(): number[] {
+    const pages = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   getImageUrl(files: string[]): string {
     if (files && files.length > 0) {
-      return `${this.baseImageUrl}${files[0]}`;
+      return this.getLink(files[0]);
     }
-    return 'assets/img/blog/blog1.jpg'; // Image par défaut
+    return 'assets/img/blog/blog1.jpg';
   }
 
-  formatDate(date: Date | string): string {
-    const d = new Date(date);
-    return d.toLocaleDateString('fr-FR');
+  formatDate(dateString: string | Date): string {
+    if (!dateString) return '';
+    
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   }
 
-  generatePages(): number[] {
-    const pages: number[] = [];
-    const maxVisible = 5;
-    
-    if (this.totalPages <= maxVisible) {
-      for (let i = 1; i <= this.totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (this.currentPage <= 3) {
-        for (let i = 1; i <= Math.min(maxVisible, this.totalPages); i++) {
-          pages.push(i);
-        }
-      } else if (this.currentPage >= this.totalPages - 2) {
-        for (let i = this.totalPages - maxVisible + 1; i <= this.totalPages; i++) {
-          pages.push(i);
-        }
-      } else {
-        for (let i = this.currentPage - 2; i <= this.currentPage + 2; i++) {
-          pages.push(i);
-        }
-      }
+
+  getPageNumbers() {
+    const pageNumbers = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pageNumbers.push(i);
     }
-    
-    return pages;
+    return pageNumbers;
+  }
+
+  public getLink(url: string) {
+    const link = `${environment.urlFile}`; //"http://localhost:8000/" 
+    return link + url;
   }
 }

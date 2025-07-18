@@ -1,27 +1,12 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ApiService, PaginationResponse } from '../../services/api.service';
-import { BlogModel } from './models/blog.model';
+import { Injectable } from '@angular/core'; 
+import { ApiService } from '../../services/api.service'; 
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BlogsService extends ApiService {
-  private endpoint = '/blogs';
+export class BlogsService  extends ApiService {
+  endpoint: string = `${environment.apiUrl}/optimatincorporation/blogs`;
 
-  getBlogs(page: number = 1, limit: number = 6): Observable<PaginationResponse<BlogModel>> {
-    return this.getWithPagination<BlogModel>(this.endpoint, page, limit);
-  }
-
-  getBlogById(id: number): Observable<BlogModel> {
-    return this.get<BlogModel>(`${this.endpoint}/${id}`);
-  }
-
-  getBlogByUrl(url: string): Observable<BlogModel> {
-    return this.get<BlogModel>(`${this.endpoint}/url/${url}`);
-  }
-
-  incrementViews(id: number): Observable<any> {
-    return this.post(`${this.endpoint}/${id}/views`, {});
-  }
+   
 }

@@ -16,6 +16,9 @@ import { AdminDashboardComponent } from './pages/admin/dashboard/admin-dashboard
 import { AdminBlogListComponent } from './pages/admin/blog-list/admin-blog-list.component';
 import { AdminBlogFormComponent } from './pages/admin/blog-form/admin-blog-form.component';
 import { AuthGuard } from './pages/admin/auth.guard';
+import { AuthComponent } from './auth/auth.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -30,6 +33,16 @@ export const routes: Routes = [
     { path: 'products', component: ProductsComponent },
     { path: 'blog', component: BlogComponent },
     { path: 'blog/:id', component: BlogDetailComponent },
+    // Auth routes
+    {
+        path: 'auth', 
+        component: AuthComponent,
+        children: [
+            { path: 'login', component: LoginComponent },
+            { path: 'register', component: RegisterComponent },
+            { path: '', redirectTo: 'login', pathMatch: 'full' }
+        ]
+    },
     // Admin routes
     {
         path: 'admin/login', 

@@ -1,81 +1,94 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { Observable, Subject, tap } from 'rxjs';    
+import { ApiResponse } from '../models/api-response.model';
 
-export interface PaginationResponse<T> {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
+// const cacheBuster$ = new Subject<void>();
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApiService {
-  protected baseUrl = environment.apiUrl;
+export abstract class ApiService {
+  abstract get endpoint(): string; 
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient) { }
 
-  protected getHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    });
+  private _refreshDataList$ = new Subject<void>();
+
+  private _refreshData$ = new Subject<void>();
+
+  get refreshDataList$() {
+    return this._refreshDataList$;
   }
 
-  get<T>(endpoint: string, params?: any): Observable<T> {
-    let httpParams = new HttpParams();
-    if (params) {
-      Object.keys(params).forEach(key => {
-        if (params[key] !== null && params[key] !== undefined) {
-          httpParams = httpParams.set(key, params[key].toString());
-        }
-      });
-    }
-
-    return this.http.get<T>(`${this.baseUrl}${endpoint}`, {
-      headers: this.getHeaders(),
-      params: httpParams
-    });
+  get refreshData$() {
+    return this._refreshData$;
+  }
+  
+  // @Cacheable({ cacheBusterObserver: cacheBuster$ })
+  getPaginated(page: number, pageSize: number): Observable<ApiResponse> { 
+    const params = {page: page, page_size: pageSize }; 
+    return this.http.get<ApiResponse>(`${this.endpoint}/all/paginate`, { params });
+  }
+ 
+  // @Cacheable({ cacheBusterObserver: cacheBuster$ })
+  getAll(): Observable<any> {
+    return this.http.get(`${this.endpoint}/all`);
   }
 
-  post<T>(endpoint: string, data: any): Observable<T> {
-    return this.http.post<T>(`${this.baseUrl}${endpoint}`, data, {
-      headers: this.getHeaders()
-    });
+  getAllLimit(): Observable<any> {
+    return this.http.get(`${this.endpoint}/all/limit`);
+  }
+  
+
+  get(id: number): Observable<any> {
+    return this.http.get(`${this.endpoint}/get/${id}`);
   }
 
-  put<T>(endpoint: string, data: any): Observable<T> {
-    return this.http.put<T>(`${this.baseUrl}${endpoint}`, data, {
-      headers: this.getHeaders()
-    });
+  getTitle(title_url: string): Observable<any> {
+    return this.http.get(`${this.endpoint}/get-by-title/${title_url}`);
+  }
+ 
+
+  create(data: any): Observable<any> {
+    return this.http.post(`${this.endpoint}/create`, data, {
+      reportProgress: true,
+      observe: 'events'
+    }).pipe(tap(() => {
+      this._refreshDataList$.next();
+      this._refreshData$.next();
+      // cacheBuster$.next();
+    }));
   }
 
-  delete<T>(endpoint: string): Observable<T> {
-    return this.http.delete<T>(`${this.baseUrl}${endpoint}`, {
-      headers: this.getHeaders()
-    });
+  update(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.endpoint}/update/${id}`, data).pipe(tap(() => {
+      this._refreshDataList$.next();
+      this._refreshData$.next();
+      // cacheBuster$.next();
+    }));
+  }
+ 
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.endpoint}/delete/${id}`).pipe(tap(() => {
+      this._refreshDataList$.next();
+      this._refreshData$.next();
+      // cacheBuster$.next();
+    }));
   }
 
-  getWithPagination<T>(endpoint: string, page: number = 1, limit: number = 10, params?: any): Observable<PaginationResponse<T>> {
-    let httpParams = new HttpParams()
-      .set('page', page.toString())
-      .set('limit', limit.toString());
+  // Get file
+  getFile(url: string): Observable<any> {
+    return this.http.get(`${this.endpoint}/${url}`);
+  }
 
-    if (params) {
-      Object.keys(params).forEach(key => {
-        if (params[key] !== null && params[key] !== undefined) {
-          httpParams = httpParams.set(key, params[key].toString());
-        }
-      });
-    }
-
-    return this.http.get<PaginationResponse<T>>(`${this.baseUrl}${endpoint}`, {
-      headers: this.getHeaders(),
-      params: httpParams
+  uploadFile(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file); 
+    return this.http.post(`${this.endpoint}/uploads`, formData, {
+      reportProgress: true,
+      observe: 'events'
     });
   }
 }

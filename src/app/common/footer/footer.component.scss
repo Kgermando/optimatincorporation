@@ -28,6 +28,32 @@
   }
 }
 
+// User access in footer
+.user-access {
+  .user-login-link {
+    display: inline-flex;
+    align-items: center;
+    color: #28a745;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: rgba(40, 167, 69, 0.1);
+
+    i {
+      margin-right: 8px;
+      font-size: 1rem;
+    }
+
+    &:hover {
+      color: #155724;
+      background-color: rgba(40, 167, 69, 0.2);
+      transform: translateY(-2px);
+    }
+  }
+}
+
 // Responsive adjustments
 @media (max-width: 768px) {
   .admin-access {
@@ -36,6 +62,15 @@
     padding-top: 10px;
 
     .admin-login-link {
+      font-size: 0.85rem;
+      padding: 6px 10px;
+    }
+  }
+  
+  .user-access {
+    text-align: center;
+    
+    .user-login-link {
       font-size: 0.85rem;
       padding: 6px 10px;
     }
