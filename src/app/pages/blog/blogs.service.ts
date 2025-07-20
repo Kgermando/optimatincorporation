@@ -5,8 +5,6 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class BlogsService  extends ApiService {
+export class BlogsService extends ApiService {
   endpoint: string = `${environment.apiUrl}/optimatincorporation/blogs`;
-
-   
 }

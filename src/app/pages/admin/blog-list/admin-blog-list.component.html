@@ -1,0 +1,240 @@
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <nav class="admin-sidebar">
+    <div class="sidebar-header">
+      <h3>Admin Panel</h3>
+    </div>
+    <ul class="sidebar-menu">
+      <li>
+        <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <i class='bx bx-tachometer'></i>
+          Tableau de bord
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/blogs" routerLinkActive="active">
+          <i class='bx bx-news'></i>
+          Articles de blog
+        </a>
+      </li>
+      <li>
+        <a (click)="logout()" class="logout-btn">
+          <i class='bx bx-log-out'></i>
+          Déconnexion
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1>Gestion des articles de blog</h1>
+      <a routerLink="/admin/blogs/create" class="btn btn-success">
+        <i class='bx bx-plus'></i>
+        Nouvel article
+      </a>
+    </div>
+
+    <div class="admin-content">
+      <!-- Search and filters -->
+      <div class="search-section">
+        <div class="search-box">
+          <input 
+            type="text" 
+            [(ngModel)]="searchTerm" 
+            (input)="onSearch()"
+            placeholder="Rechercher un article..."
+            class="form-control"
+          >
+          <button (click)="onSearch()" class="btn btn-primary">
+            <i class='bx bx-search'></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading state -->
+      <div *ngIf="loading" class="text-center py-4">
+        <div class="spinner-border"></div>
+        <p>Chargement...</p>
+      </div>
+
+      <!-- Error state -->
+      <div *ngIf="error && !loading" class="alert alert-danger">
+        {{ error }}
+      </div>
+
+      <!-- Blog list -->
+      <div *ngIf="!loading && !error" class="blog-table">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>
+                <button (click)="sortBy('id')" class="sort-btn">
+                  ID <i [class]="'bx ' + getSortIcon('id')"></i>
+                </button>
+              </th>
+              <th>Image</th>
+              <th>
+                <button (click)="sortBy('title')" class="sort-btn">
+                  Titre <i [class]="'bx ' + getSortIcon('title')"></i>
+                </button>
+              </th>
+              <th>URL</th>
+              <th>
+                <button (click)="sortBy('signature')" class="sort-btn">
+                  Auteur <i [class]="'bx ' + getSortIcon('signature')"></i>
+                </button>
+              </th>
+              <th>Mots-clés</th>
+              <th>
+                <button (click)="sortBy('created')" class="sort-btn">
+                  Date création <i [class]="'bx ' + getSortIcon('created')"></i>
+                </button>
+              </th>
+              <th>
+                <button (click)="sortBy('updated')" class="sort-btn">
+                  Dernière MAJ <i [class]="'bx ' + getSortIcon('updated')"></i>
+                </button>
+              </th>
+              <th>
+                <button (click)="sortBy('views')" class="sort-btn">
+                  Vues <i [class]="'bx ' + getSortIcon('views')"></i>
+                </button>
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let blog of blogs">
+              <td>
+                <span class="blog-id">#{{ getBlogId(blog) }}</span>
+              </td>
+              <td>
+                <img 
+                  [src]="getImageUrl(blog.files)" 
+                  [alt]="blog.title"
+                  class="blog-thumbnail"
+                  onerror="this.src='assets/img/blog/blog1.jpg'"
+                >
+              </td>
+              <td>
+                <div class="blog-title-cell">
+                  <strong [title]="blog.title">{{ blog.title }}</strong>
+                  <br>
+                  <small class="text-muted" [title]="blog.resume">
+                    {{ (blog.resume || '') | slice:0:80 }}{{ (blog.resume && blog.resume.length > 80) ? '...' : '' }}
+                  </small>
+                </div>
+              </td>
+              <td>
+                <code class="blog-url" [title]="blog.title_url">{{ blog.title_url }}</code>
+              </td>
+              <td>
+                <span class="blog-signature">{{ blog.signature || 'Admin' }}</span>
+              </td>
+              <td>
+                <div class="keywords-cell">
+                  <span 
+                    *ngFor="let keyword of getKeywordsPreview(blog.keyword)" 
+                    class="keyword-tag"
+                    [title]="keyword"
+                  >
+                    {{ keyword }}
+                  </span>
+                  <span *ngIf="blog.keyword && blog.keyword.length > 3" 
+                        class="keyword-tag" 
+                        style="background: #f8f9fa; color: #6c757d;"
+                        [title]="'+ ' + (blog.keyword.length - 3) + ' autres mots-clés'">
+                    +{{ blog.keyword.length - 3 }}
+                  </span>
+                  <span *ngIf="!blog.keyword || blog.keyword.length === 0" class="text-muted">
+                    Aucun
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div class="date-cell">
+                  {{ formatDate(blog.created || blog.CreatedAt || blog.created_at) }}
+                </div>
+              </td>
+              <td>
+                <div class="date-cell">
+                  <span *ngIf="blog.UpdatedAt || blog.updated_at; else noUpdate">
+                    {{ formatDate(blog.UpdatedAt || blog.updated_at) }}
+                  </span>
+                  <ng-template #noUpdate>
+                    <span class="text-muted">-</span>
+                  </ng-template>
+                </div>
+              </td>
+              <td>
+                <span class="views-count">{{ blog.views || 0 }}</span>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <a [routerLink]="['/admin/blogs/edit', getBlogId(blog)]" 
+                     class="btn btn-sm btn-warning" 
+                     title="Modifier">
+                    <i class='bx bx-edit'></i>
+                  </a>
+                  <button (click)="deleteBlog(blog)" 
+                          class="btn btn-sm btn-danger"
+                          title="Supprimer">
+                    <i class='bx bx-trash'></i>
+                  </button>
+                  <a [routerLink]="['/blog-details', getBlogId(blog)]" 
+                     target="_blank" 
+                     class="btn btn-sm btn-info"
+                     title="Voir">
+                    <i class='bx bx-show'></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- No results -->
+        <div *ngIf="blogs.length === 0" class="text-center py-4">
+          <p>Aucun article trouvé.</p>
+        </div>
+
+        <!-- Pagination -->
+        <div *ngIf="totalPages > 1" class="pagination-container">
+          <nav>
+            <ul class="pagination">
+              <li [class.disabled]="currentPage === 1">
+                <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+                  <i class='bx bx-chevron-left'></i>
+                </button>
+              </li>
+              
+              <li *ngFor="let page of generatePages()" [class.active]="page === currentPage">
+                <button (click)="changePage(page)">{{ page }}</button>
+              </li>
+              
+              <li [class.disabled]="currentPage === totalPages">
+                <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+                  <i class='bx bx-chevron-right'></i>
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div *ngIf="blogToDelete" class="modal-overlay" (click)="cancelDelete()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Confirmer la suppression</h3>
+    <p>Êtes-vous sûr de vouloir supprimer l'article "{{ blogToDelete.title }}" ?</p>
+    <div class="modal-actions">
+      <button (click)="cancelDelete()" class="btn btn-secondary">Annuler</button>
+      <button (click)="confirmDelete()" class="btn btn-danger">Supprimer</button>
+    </div>
+  </div>
+</div>

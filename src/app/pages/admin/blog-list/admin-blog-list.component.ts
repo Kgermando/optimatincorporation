@@ -1,469 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { AdminBlogService } from '../services/admin-blog.service';
+import { FormsModule } from '@angular/forms'; 
 import { BlogModel } from '../../blog/models/blog.model';
 import { environment } from '../../../../environments/environment';
+import { BlogsService } from '../../blog/blogs.service';
 
 @Component({
   selector: 'app-admin-blog-list',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
-  template: `
-    <div class="admin-layout">
-      <!-- Sidebar -->
-      <nav class="admin-sidebar">
-        <div class="sidebar-header">
-          <h3>Admin Panel</h3>
-        </div>
-        <ul class="sidebar-menu">
-          <li>
-            <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-              <i class='bx bx-tachometer'></i>
-              Tableau de bord
-            </a>
-          </li>
-          <li>
-            <a routerLink="/admin/blogs" routerLinkActive="active">
-              <i class='bx bx-news'></i>
-              Articles de blog
-            </a>
-          </li>
-          <li>
-            <a (click)="logout()" class="logout-btn">
-              <i class='bx bx-log-out'></i>
-              Déconnexion
-            </a>
-          </li>
-        </ul>
-      </nav>
-
-      <!-- Main Content -->
-      <main class="admin-main">
-        <div class="admin-header">
-          <h1>Gestion des articles de blog</h1>
-          <a routerLink="/admin/blogs/create" class="btn btn-success">
-            <i class='bx bx-plus'></i>
-            Nouvel article
-          </a>
-        </div>
-
-        <div class="admin-content">
-          <!-- Search and filters -->
-          <div class="search-section">
-            <div class="search-box">
-              <input 
-                type="text" 
-                [(ngModel)]="searchTerm" 
-                (input)="onSearch()"
-                placeholder="Rechercher un article..."
-                class="form-control"
-              >
-              <button (click)="onSearch()" class="btn btn-primary">
-                <i class='bx bx-search'></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- Loading state -->
-          <div *ngIf="loading" class="text-center py-4">
-            <div class="spinner-border"></div>
-            <p>Chargement...</p>
-          </div>
-
-          <!-- Error state -->
-          <div *ngIf="error && !loading" class="alert alert-danger">
-            {{ error }}
-          </div>
-
-          <!-- Blog list -->
-          <div *ngIf="!loading && !error" class="blog-table">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Image</th>
-                  <th>Titre</th>
-                  <th>Auteur</th>
-                  <th>Date</th>
-                  <th>Vues</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let blog of blogs">
-                  <td>
-                    <img 
-                      [src]="getImageUrl(blog.files)" 
-                      [alt]="blog.title"
-                      class="blog-thumbnail"
-                      onerror="this.src='assets/img/blog/blog1.jpg'"
-                    >
-                  </td>
-                  <td>
-                    <strong>{{ blog.title }}</strong>
-                    <br>
-                    <small class="text-muted">{{ blog.resume | slice:0:50 }}...</small>
-                  </td>
-                  <td>{{ blog.signature || 'Admin' }}</td>
-                  <td>{{ formatDate(blog.created || blog.CreatedAt || blog.created_at) }}</td>
-                  <td>{{ blog.views || 0 }}</td>
-                  <td>
-                    <div class="action-buttons">
-                      <a [routerLink]="['/admin/blogs/edit', blog.id]" class="btn btn-sm btn-warning">
-                        <i class='bx bx-edit'></i>
-                      </a>
-                      <button (click)="deleteBlog(blog)" class="btn btn-sm btn-danger">
-                        <i class='bx bx-trash'></i>
-                      </button>
-                      <a [routerLink]="['/blog-details', blog.id]" target="_blank" class="btn btn-sm btn-info">
-                        <i class='bx bx-show'></i>
-                      </a>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            <!-- No results -->
-            <div *ngIf="blogs.length === 0" class="text-center py-4">
-              <p>Aucun article trouvé.</p>
-            </div>
-
-            <!-- Pagination -->
-            <div *ngIf="totalPages > 1" class="pagination-container">
-              <nav>
-                <ul class="pagination">
-                  <li [class.disabled]="currentPage === 1">
-                    <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
-                      <i class='bx bx-chevron-left'></i>
-                    </button>
-                  </li>
-                  
-                  <li *ngFor="let page of generatePages()" [class.active]="page === currentPage">
-                    <button (click)="changePage(page)">{{ page }}</button>
-                  </li>
-                  
-                  <li [class.disabled]="currentPage === totalPages">
-                    <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
-                      <i class='bx bx-chevron-right'></i>
-                    </button>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
-
-    <!-- Delete Confirmation Modal -->
-    <div *ngIf="blogToDelete" class="modal-overlay" (click)="cancelDelete()">
-      <div class="modal-content" (click)="$event.stopPropagation()">
-        <h3>Confirmer la suppression</h3>
-        <p>Êtes-vous sûr de vouloir supprimer l'article "{{ blogToDelete.title }}" ?</p>
-        <div class="modal-actions">
-          <button (click)="cancelDelete()" class="btn btn-secondary">Annuler</button>
-          <button (click)="confirmDelete()" class="btn btn-danger">Supprimer</button>
-        </div>
-      </div>
-    </div>
-  `,
-  styles: [`
-    /* Admin layout styles (same as dashboard) */
-    .admin-layout {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    .admin-sidebar {
-      width: 250px;
-      background: #2c3e50;
-      color: white;
-      position: fixed;
-      height: 100vh;
-      overflow-y: auto;
-    }
-
-    .sidebar-header {
-      padding: 20px;
-      border-bottom: 1px solid #34495e;
-    }
-
-    .sidebar-header h3 {
-      margin: 0;
-      color: white;
-    }
-
-    .sidebar-menu {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .sidebar-menu li {
-      border-bottom: 1px solid #34495e;
-    }
-
-    .sidebar-menu a {
-      display: flex;
-      align-items: center;
-      padding: 15px 20px;
-      color: #bdc3c7;
-      text-decoration: none;
-      transition: all 0.3s;
-    }
-
-    .sidebar-menu a:hover,
-    .sidebar-menu a.active {
-      background: #34495e;
-      color: white;
-    }
-
-    .sidebar-menu i {
-      margin-right: 10px;
-      font-size: 18px;
-    }
-
-    .logout-btn {
-      cursor: pointer;
-    }
-
-    .admin-main {
-      flex: 1;
-      margin-left: 250px;
-      background: #f8f9fa;
-    }
-
-    .admin-header {
-      background: white;
-      padding: 20px 30px;
-      border-bottom: 1px solid #e9ecef;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .admin-header h1 {
-      margin: 0;
-      color: #2c3e50;
-    }
-
-    .admin-content {
-      padding: 30px;
-    }
-
-    /* Search section */
-    .search-section {
-      margin-bottom: 20px;
-    }
-
-    .search-box {
-      display: flex;
-      gap: 10px;
-      max-width: 400px;
-    }
-
-    .form-control {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-
-    /* Table styles */
-    .blog-table {
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .table {
-      width: 100%;
-      margin: 0;
-      border-collapse: collapse;
-    }
-
-    .table th,
-    .table td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #e9ecef;
-    }
-
-    .table th {
-      background: #f8f9fa;
-      font-weight: 600;
-      color: #2c3e50;
-    }
-
-    .blog-thumbnail {
-      width: 60px;
-      height: 40px;
-      object-fit: cover;
-      border-radius: 4px;
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 5px;
-    }
-
-    .btn {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 4px;
-      text-decoration: none;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .btn-sm {
-      padding: 4px 8px;
-      font-size: 12px;
-    }
-
-    .btn-success {
-      background: #27ae60;
-      color: white;
-    }
-
-    .btn-warning {
-      background: #f39c12;
-      color: white;
-    }
-
-    .btn-danger {
-      background: #e74c3c;
-      color: white;
-    }
-
-    .btn-info {
-      background: #3498db;
-      color: white;
-    }
-
-    .btn-primary {
-      background: #3498db;
-      color: white;
-    }
-
-    .btn-secondary {
-      background: #6c757d;
-      color: white;
-    }
-
-    .btn:hover {
-      opacity: 0.8;
-    }
-
-    /* Pagination */
-    .pagination-container {
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .pagination {
-      display: flex;
-      list-style: none;
-      padding: 0;
-      gap: 5px;
-    }
-
-    .pagination li button {
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      background: white;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    .pagination li.active button {
-      background: #3498db;
-      color: white;
-      border-color: #3498db;
-    }
-
-    .pagination li.disabled button {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    /* Modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .modal-content {
-      background: white;
-      padding: 30px;
-      border-radius: 8px;
-      max-width: 400px;
-      width: 90%;
-    }
-
-    .modal-content h3 {
-      margin-top: 0;
-      color: #2c3e50;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      margin-top: 20px;
-    }
-
-    .alert {
-      padding: 15px;
-      border-radius: 4px;
-      margin-bottom: 20px;
-    }
-
-    .alert-danger {
-      background: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-
-    .spinner-border {
-      width: 2rem;
-      height: 2rem;
-      border: 0.25em solid currentColor;
-      border-right-color: transparent;
-      border-radius: 50%;
-      animation: spin 0.75s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .text-center {
-      text-align: center;
-    }
-
-    .text-muted {
-      color: #6c757d;
-    }
-  `]
+  templateUrl: './admin-blog-list.component.html',
+  styleUrls: ['./admin-blog-list.component.scss']
 })
 export class AdminBlogListComponent implements OnInit {
   blogs: BlogModel[] = [];
@@ -475,11 +23,12 @@ export class AdminBlogListComponent implements OnInit {
   searchTerm = '';
   blogToDelete: BlogModel | null = null;
   baseImageUrl = environment.urlFile;
+  sortField: string = 'created';
+  sortDirection: 'asc' | 'desc' = 'desc';
 
   constructor(
-    private adminBlogService: AdminBlogService,
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router, 
+    private blogService: BlogsService
   ) {}
 
   ngOnInit(): void {
@@ -488,16 +37,16 @@ export class AdminBlogListComponent implements OnInit {
 
   loadBlogs(): void {
     this.loading = true;
-    this.error = null;
+    this.error = null; 
 
-    this.adminBlogService.getBlogs(this.currentPage, this.limit, this.searchTerm).subscribe({
-      next: (response) => {
-        this.blogs = response.data;
-        this.currentPage = response.page;
-        this.totalPages = response.totalPages;
+    this.blogService.getPaginated(this.currentPage, this.limit).subscribe({
+      next: (response: any) => {
+        this.blogs = response.data || [];
+        this.totalPages = response.pagination?.total_pages || 1;
+        this.sortBlogs(); // Apply current sort after loading
         this.loading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading blogs:', error);
         this.error = 'Erreur lors du chargement des articles';
         this.loading = false;
@@ -552,8 +101,93 @@ export class AdminBlogListComponent implements OnInit {
   }
 
   formatDate(date: Date | string): string {
+    if (!date) return '-';
     const d = new Date(date);
-    return d.toLocaleDateString('fr-FR');
+    return d.toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit', 
+      year: 'numeric'
+    });
+  }
+
+  formatDateWithTime(date: Date | string): string {
+    if (!date) return '-';
+    const d = new Date(date);
+    return d.toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  getKeywordsPreview(keywords: string[]): string[] {
+    if (!keywords || keywords.length === 0) return [];
+    return keywords.slice(0, 3); // Show only first 3 keywords
+  }
+
+  getBlogId(blog: BlogModel): number {
+    return blog.id || blog.ID;
+  }
+
+  sortBy(field: string): void {
+    if (this.sortField === field) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortDirection = 'asc';
+    }
+    this.sortBlogs();
+  }
+
+  private sortBlogs(): void {
+    this.blogs.sort((a, b) => {
+      let aValue: any;
+      let bValue: any;
+
+      switch (this.sortField) {
+        case 'id':
+          aValue = this.getBlogId(a);
+          bValue = this.getBlogId(b);
+          break;
+        case 'title':
+          aValue = a.title?.toLowerCase() || '';
+          bValue = b.title?.toLowerCase() || '';
+          break;
+        case 'signature':
+          aValue = a.signature?.toLowerCase() || '';
+          bValue = b.signature?.toLowerCase() || '';
+          break;
+        case 'created':
+          aValue = new Date(a.created || a.CreatedAt || a.created_at || 0);
+          bValue = new Date(b.created || b.CreatedAt || b.created_at || 0);
+          break;
+        case 'updated':
+          aValue = new Date(a.UpdatedAt || a.updated_at || 0);
+          bValue = new Date(b.UpdatedAt || b.updated_at || 0);
+          break;
+        case 'views':
+          aValue = a.views || 0;
+          bValue = b.views || 0;
+          break;
+        default:
+          return 0;
+      }
+
+      if (aValue < bValue) {
+        return this.sortDirection === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return this.sortDirection === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
+  getSortIcon(field: string): string {
+    if (this.sortField !== field) return 'bx-sort';
+    return this.sortDirection === 'asc' ? 'bx-sort-up' : 'bx-sort-down';
   }
 
   deleteBlog(blog: BlogModel): void {
@@ -562,12 +196,15 @@ export class AdminBlogListComponent implements OnInit {
 
   confirmDelete(): void {
     if (this.blogToDelete) {
-      this.adminBlogService.deleteBlog(this.blogToDelete.id).subscribe({
+      const blogId = this.blogToDelete.id;
+      
+      this.blogService.delete(blogId).subscribe({
         next: () => {
+          console.log('Blog deleted successfully');
           this.blogToDelete = null;
-          this.loadBlogs();
+          this.loadBlogs(); // Reload the list
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error deleting blog:', error);
           this.error = 'Erreur lors de la suppression de l\'article';
           this.blogToDelete = null;
