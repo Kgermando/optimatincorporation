@@ -18,18 +18,6 @@ export class AdminBlogService {
   constructor(private blogService: BlogsService) {}
 
   /**
-   * Get paginated list of blogs with search
-   */
-  getBlogs(page: number = 1, limit: number = 10, search: string = ''): Observable<BlogListResponse> {
-    // TODO: Implement actual API call for admin blog list
-    // For now, simulate with the existing service
-    return this.blogService.getList().pipe(
-      // Transform the response to match admin requirements
-      // This is a temporary implementation
-    );
-  }
-
-  /**
    * Create a new blog
    */
   createBlog(blogData: Partial<BlogModel>): Observable<BlogModel> {

@@ -11,11 +11,12 @@ import { ServiceDetailComponent } from './pages/services-page/service-detail/ser
 import { ProductsComponent } from './pages/products/products.component';
 import { BlogComponent } from './pages/blog/blog.component';
 import { BlogDetailComponent } from './pages/blog/blog-detail/blog-detail.component';
-import { AdminLoginComponent } from './pages/admin/login/admin-login.component';
 import { AdminDashboardComponent } from './pages/admin/dashboard/admin-dashboard.component';
 import { AdminBlogListComponent } from './pages/admin/blog-list/admin-blog-list.component';
 import { AdminBlogFormComponent } from './pages/admin/blog-form/admin-blog-form.component';
-import { AuthGuard } from './pages/admin/auth.guard';
+import { AdminUserListComponent } from './pages/admin/user-list/admin-user-list.component';
+import { AdminUserFormComponent } from './pages/admin/user-form/admin-user-form.component';
+import { AuthGuard } from './auth/auth.guard';
 import { AuthComponent } from './auth/auth.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
@@ -46,12 +47,24 @@ export const routes: Routes = [
     // Admin routes
     {
         path: 'admin/login', 
-        component: AdminLoginComponent,
+        component: LoginComponent,
         data: {
             title: 'Connexion Admin',
             metatags: {
                 description: 'Connexion administration',
                 keywords: 'admin, connexion',
+                robots: 'noindex, nofollow'
+            }
+        }
+    },
+    {
+        path: 'admin/register', 
+        component: RegisterComponent,
+        data: {
+            title: 'Inscription Admin',
+            metatags: {
+                description: 'Inscription administration',
+                keywords: 'admin, inscription',
                 robots: 'noindex, nofollow'
             }
         }
@@ -104,6 +117,45 @@ export const routes: Routes = [
             metatags: {
                 description: 'Modifier un article de blog',
                 keywords: 'admin, blog, modifier',
+                robots: 'noindex, nofollow'
+            }
+        }
+    },
+    {
+        path: 'admin/users', 
+        component: AdminUserListComponent,
+        canActivate: [AuthGuard],
+        data: {
+            title: 'Gestion des utilisateurs',
+            metatags: {
+                description: 'Gestion des utilisateurs',
+                keywords: 'admin, utilisateurs, gestion',
+                robots: 'noindex, nofollow'
+            }
+        }
+    },
+    {
+        path: 'admin/users/create', 
+        component: AdminUserFormComponent,
+        canActivate: [AuthGuard],
+        data: {
+            title: 'Créer un utilisateur',
+            metatags: {
+                description: 'Créer un nouvel utilisateur',
+                keywords: 'admin, utilisateur, créer',
+                robots: 'noindex, nofollow'
+            }
+        }
+    },
+    {
+        path: 'admin/users/:id/edit', 
+        component: AdminUserFormComponent,
+        canActivate: [AuthGuard],
+        data: {
+            title: 'Modifier un utilisateur',
+            metatags: {
+                description: 'Modifier un utilisateur',
+                keywords: 'admin, utilisateur, modifier',
                 robots: 'noindex, nofollow'
             }
         }

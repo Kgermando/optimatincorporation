@@ -1,265 +1,129 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
-  template: `
-    <div class="login-card">
-      <div class="login-header">
-        <img src="assets/img/logo.png" alt="Logo" class="logo">
-        <h2>Connexion</h2>
-        <p>Connectez-vous à votre compte</p>
-      </div>
-      
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input 
-            type="email" 
-            id="email" 
-            formControlName="email"
-            class="form-control"
-            [class.is-invalid]="isFieldInvalid('email')"
-            placeholder="Votre adresse email"
-          >
-          <div *ngIf="isFieldInvalid('email')" class="invalid-feedback">
-            Email requis et valide
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="password">Mot de passe</label>
-          <input 
-            type="password" 
-            id="password" 
-            formControlName="password"
-            class="form-control"
-            [class.is-invalid]="isFieldInvalid('password')"
-            placeholder="Votre mot de passe"
-          >
-          <div *ngIf="isFieldInvalid('password')" class="invalid-feedback">
-            Mot de passe requis
-          </div>
-        </div>
-
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="remember" value="true">
-          <label class="form-check-label" for="remember">
-            Se souvenir de moi
-          </label>
-        </div>
-
-        <div *ngIf="error" class="alert alert-danger">
-          {{ error }}
-        </div>
-
-        <button 
-          type="submit" 
-          class="btn btn-primary btn-block"
-          [disabled]="loginForm.invalid || isLoading"
-        >
-          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-          {{ isLoading ? 'Connexion...' : 'Se connecter' }}
-        </button>
-        
-        <div class="text-center mt-3">
-          <p>Pas encore de compte? <a routerLink="/auth/register">Créer un compte</a></p>
-        </div>
-      </form>
-      
-      <div class="footer">
-        <p>&copy; <a href="http://ictech.dev" target="_blank">ICTECH {{year}}</a></p>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .login-card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      padding: 40px;
-      width: 100%;
-      max-width: 400px;
-    }
-
-    .login-header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .logo {
-      height: 60px;
-      margin-bottom: 20px;
-    }
-
-    .login-header h2 {
-      color: #333;
-      margin-bottom: 10px;
-    }
-
-    .login-header p {
-      color: #666;
-      margin: 0;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      color: #333;
-      font-weight: 500;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 16px;
-      transition: border-color 0.3s;
-    }
-
-    .form-control:focus {
-      border-color: #667eea;
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
-    }
-
-    .form-control.is-invalid {
-      border-color: #dc3545;
-    }
-
-    .invalid-feedback {
-      color: #dc3545;
-      font-size: 14px;
-      margin-top: 5px;
-    }
-
-    .form-check {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .form-check-input {
-      margin-right: 8px;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .btn-primary {
-      background-color: #667eea;
-      color: white;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      background-color: #5a6fd8;
-    }
-
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .alert {
-      padding: 12px;
-      border-radius: 5px;
-      margin-bottom: 20px;
-    }
-
-    .alert-danger {
-      background-color: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-
-    .spinner-border-sm {
-      width: 1rem;
-      height: 1rem;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 30px;
-      padding-top: 20px;
-      border-top: 1px solid #eee;
-    }
-
-    .footer p {
-      color: #666;
-      margin: 0;
-    }
-
-    .footer a {
-      color: #667eea;
-      text-decoration: none;
-    }
-
-    .footer a:hover {
-      text-decoration: underline;
-    }
-  `]
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
-  loginForm: FormGroup;
-  isLoading = false;
-  error: string | null = null;
+export class LoginComponent implements OnInit {
   year: string;
+  isLoading = false;
+  canShowRegisterLink = false; // Désactivé pour le système simple
+  
+  // Form reactive
+  loginForm: FormGroup;
+  
+  // Validation states pour affichage
+  emailError: string = '';
+  passwordError: string = '';
 
   constructor(
-    private fb: FormBuilder,
+    private router: Router,
     private authService: AuthService,
-    private router: Router
+    private toastr: ToastrService,
+    private fb: FormBuilder
   ) {
     this.year = formatDate(new Date(), 'yyyy', 'en');
+    
+    // Initialisation du formulaire réactif
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  isFieldInvalid(fieldName: string): boolean {
-    const field = this.loginForm.get(fieldName);
-    return !!(field && field.invalid && (field.dirty || field.touched));
+  ngOnInit(): void {
+    // Vérifier si l'utilisateur est déjà connecté
+    if (this.authService.isAuthentification()) {
+      this.router.navigate(['/admin']);
+    }
   }
 
-  onSubmit(): void {
-    if (this.loginForm.valid) {
-      this.isLoading = true;
-      this.error = null;
+  // Méthode de validation des champs utilisant le formulaire réactif
+  validateForm(): boolean {
+    this.emailError = '';
+    this.passwordError = '';
 
-      this.authService.login(this.loginForm.value).subscribe({
-        next: (response) => {
-          this.isLoading = false;
-          // Redirection based on user role
-          if (response.user.role === 'Admin') {
-            this.router.navigate(['/admin/dashboard']);
-          } else {
-            this.router.navigate(['/']);
-          }
-        },
-        error: (error) => {
-          this.isLoading = false;
-          this.error = error.error?.message || 'Erreur de connexion. Vérifiez vos identifiants.';
-        }
-      });
+    const emailControl = this.loginForm.get('email');
+    const passwordControl = this.loginForm.get('password');
+
+    // Validation email
+    if (emailControl?.hasError('required')) {
+      this.emailError = 'L\'email est requis';
+    } else if (emailControl?.hasError('email')) {
+      this.emailError = 'Format d\'email invalide';
     }
+
+    // Validation password
+    if (passwordControl?.hasError('required')) {
+      this.passwordError = 'Le mot de passe est requis';
+    } else if (passwordControl?.hasError('minlength')) {
+      this.passwordError = 'Le mot de passe doit contenir au moins 6 caractères';
+    }
+
+    return this.loginForm.valid;
+  }
+
+  // Clear error messages when user types
+  onEmailChange(): void {
+    this.emailError = '';
+  }
+
+  onPasswordChange(): void {
+    this.passwordError = '';
+  }
+
+  onSubmit(event?: Event) {
+    // Empêcher le comportement par défaut du formulaire
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    // Validation côté client
+    if (!this.validateForm()) {
+      return;
+    }
+
+    console.log("Tentative de connexion...");
+    this.isLoading = true;
+    
+    const formValue = this.loginForm.value;
+    const loginData = {
+      email: formValue.email?.trim(),
+      password: formValue.password
+    };
+
+    this.authService.login(loginData).subscribe({
+      next: (response) => { 
+        this.isLoading = false;
+        
+        if (response.success && response.user) {
+          console.log('Connexion réussie:', response);
+          this.toastr.success(`Bienvenue ${response.user.fullname}! 🎉`, 'Connexion réussie');
+          
+          // Redirection vers l'admin
+          if (response.user.role === 'admin' || response.user.role === 'super-admin') {
+            this.router.navigate(['/admin']);
+          } else {
+            this.router.navigate(['/dashboard']);
+          }
+        } else {
+          this.toastr.error(response.message, 'Erreur de connexion');
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Erreur de connexion:', error);
+        this.toastr.error('Une erreur est survenue lors de la connexion', 'Erreur');
+      }
+    });
   }
 }

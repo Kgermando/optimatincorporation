@@ -1,0 +1,90 @@
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <nav class="admin-sidebar">
+    <div class="sidebar-header">
+      <h3>Admin Panel</h3>
+    </div>
+    <ul class="sidebar-menu">
+      <li>
+        <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <i class='bx bx-tachometer'></i>
+          Tableau de bord
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/blogs" routerLinkActive="active">
+          <i class='bx bx-news'></i>
+          Articles de blog
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/users" routerLinkActive="active">
+          <i class='bx bx-users'></i>
+          Utilisateurs
+        </a>
+      </li>
+      <li>
+        <a (click)="logout()" class="logout-btn">
+          <i class='bx bx-log-out'></i>
+          Déconnexion
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+        <div class="admin-header">
+          <h1>Tableau de bord</h1>
+          <div class="admin-user">
+            <span *ngIf="currentUser">Bienvenue, {{ currentUser.fullname }}</span>
+          </div>
+        </div>    <div class="admin-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class='bx bx-news'></i>
+          </div>
+          <div class="stat-content">
+            <h3>Articles de blog</h3>
+            <p>Gérer les articles</p>
+            <a routerLink="/admin/blogs" class="btn btn-primary">Voir les articles</a>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class='bx bx-plus'></i>
+          </div>
+          <div class="stat-content">
+            <h3>Nouvel article</h3>
+            <p>Créer un nouvel article</p>
+            <a routerLink="/admin/blogs/create" class="btn btn-success">Créer un article</a>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class='bx bx-users'></i>
+          </div>
+          <div class="stat-content">
+            <h3>Utilisateurs</h3>
+            <p>Gérer les utilisateurs</p>
+            <a routerLink="/admin/users" class="btn btn-primary">Voir les utilisateurs</a>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class='bx bx-user-plus'></i>
+          </div>
+          <div class="stat-content">
+            <h3>Nouvel utilisateur</h3>
+            <p>Créer un nouvel utilisateur</p>
+            <a routerLink="/admin/users/create" class="btn btn-success">Créer un utilisateur</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

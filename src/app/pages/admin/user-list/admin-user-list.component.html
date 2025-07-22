@@ -1,0 +1,113 @@
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <nav class="admin-sidebar">
+    <div class="sidebar-header">
+      <h3>Admin Panel</h3>
+    </div>
+    <ul class="sidebar-menu">
+      <li>
+        <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <i class='bx bx-tachometer'></i>
+          Tableau de bord
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/blogs" routerLinkActive="active">
+          <i class='bx bx-news'></i>
+          Articles de blog
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/users" routerLinkActive="active">
+          <i class='bx bx-user'></i>
+          Utilisateurs
+        </a>
+      </li>
+      <li>
+        <a (click)="logout()" class="logout-btn">
+          <i class='bx bx-log-out'></i>
+          Déconnexion
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1>Gestion des utilisateurs</h1>
+      <div class="admin-actions">
+        <a routerLink="/admin/users/create" class="btn btn-success">
+          <i class='bx bx-plus'></i>
+          Nouvel utilisateur
+        </a>
+      </div>
+    </div>
+
+    <div class="admin-content">
+      <div *ngIf="loading" class="loading">
+        <p>Chargement des utilisateurs...</p>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger">
+        {{ error }}
+      </div>
+
+      <div *ngIf="!loading && !error" class="users-table">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nom complet</th>
+              <th>Email</th>
+              <th>Téléphone</th>
+              <th>Rôle</th>
+              <th>Statut</th>
+              <th>Entreprise</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users" [class.disabled]="!user.status">
+              <td>{{ user.ID }}</td>
+              <td>{{ user.fullname }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.phone || '-' }}</td>
+              <td>{{ user.role }}</td>
+              <td>
+                <span class="status-badge" [class.active]="user.status" [class.inactive]="!user.status">
+                  {{ user.status ? 'Actif' : 'Inactif' }}
+                </span>
+              </td>
+              <td>{{ user.entreprise || '-' }}</td>
+              <td class="actions">
+                <button 
+                  class="btn btn-sm btn-outline-primary" 
+                  routerLink="/admin/users/{{ user.ID }}/edit"
+                  title="Modifier">
+                  <i class='bx bx-edit'></i>
+                </button>
+                <button 
+                  class="btn btn-sm btn-outline-warning" 
+                  (click)="toggleUserStatus(user)"
+                  [title]="user.status ? 'Désactiver' : 'Activer'">
+                  <i class='bx' [class.bx-lock]="user.status" [class.bx-lock-open]="!user.status"></i>
+                </button>
+                <button 
+                  class="btn btn-sm btn-outline-danger" 
+                  (click)="deleteUser(user.ID!)"
+                  title="Supprimer">
+                  <i class='bx bx-trash'></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div *ngIf="users.length === 0" class="no-users">
+          <p>Aucun utilisateur trouvé.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

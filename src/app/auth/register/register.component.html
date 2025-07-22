@@ -1,0 +1,193 @@
+<div class="register-card">
+  <div class="register-header">
+    <img src="assets/img/logo.png" alt="Logo" class="logo">
+    <h2>Inscription</h2>
+    <p>Créez votre compte</p>
+  </div>
+  
+  <form *ngIf="canRegister" [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="fullname">Nom complet</label>
+          <input 
+            type="text" 
+            id="fullname" 
+            formControlName="fullname"
+            class="form-control"
+            [class.is-invalid]="isFieldInvalid('fullname')"
+            placeholder="Nom complet"
+          >
+          <div *ngIf="isFieldInvalid('fullname')" class="invalid-feedback">
+            Nom complet requis
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email"
+            class="form-control"
+            [class.is-invalid]="isFieldInvalid('email')"
+            placeholder="Adresse email"
+          >
+          <div *ngIf="isFieldInvalid('email')" class="invalid-feedback">
+            Email requis et valide
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="phone">Téléphone</label>
+          <input 
+            type="text" 
+            id="phone" 
+            formControlName="phone"
+            class="form-control"
+            [class.is-invalid]="isFieldInvalid('phone')"
+            placeholder="Numéro de téléphone"
+          >
+          <div *ngIf="isFieldInvalid('phone')" class="invalid-feedback">
+            Téléphone requis
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="title">Titre</label>
+          <input 
+            type="text" 
+            id="title" 
+            formControlName="title"
+            class="form-control"
+            [class.is-invalid]="isFieldInvalid('title')"
+            placeholder="Titre/Poste"
+          >
+          <div *ngIf="isFieldInvalid('title')" class="invalid-feedback">
+            Titre requis
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input 
+            type="password" 
+            id="password" 
+            formControlName="password"
+            class="form-control"
+            [class.is-invalid]="isFieldInvalid('password')"
+            placeholder="Mot de passe"
+          >
+          <div *ngIf="isFieldInvalid('password')" class="invalid-feedback">
+            Mot de passe requis (min 6 caractères)
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="password_confirm">Confirmer le mot de passe</label>
+          <input 
+            type="password" 
+            id="password_confirm" 
+            formControlName="password_confirm"
+            class="form-control"
+            [class.is-invalid]="isFieldInvalid('password_confirm')"
+            placeholder="Confirmer le mot de passe"
+          >
+          <div *ngIf="isFieldInvalid('password_confirm')" class="invalid-feedback">
+            Les mots de passe ne correspondent pas
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="role">Rôle</label>
+          <select 
+            id="role" 
+            formControlName="role"
+            class="form-control"
+            [class.is-invalid]="isFieldInvalid('role')"
+          >
+            <option value="">Sélectionner un rôle</option>
+            <option value="Admin">Admin</option>
+            <option value="User">User</option>
+            <option value="Support">Support</option>
+          </select>
+          <div *ngIf="isFieldInvalid('role')" class="invalid-feedback">
+            Rôle requis
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="permission">Permission</label>
+          <select 
+            id="permission" 
+            formControlName="permission"
+            class="form-control"
+            [class.is-invalid]="isFieldInvalid('permission')"
+          >
+            <option value="">Sélectionner une permission</option>
+            <option value="CR">CR</option>
+            <option value="CRU">CRU</option>
+            <option value="RU">RU</option>
+            <option value="CRUD">CRUD</option>
+          </select>
+          <div *ngIf="isFieldInvalid('permission')" class="invalid-feedback">
+            Permission requise
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-check">
+      <input 
+        class="form-check-input" 
+        type="checkbox" 
+        id="status" 
+        formControlName="status"
+      >
+      <label class="form-check-label" for="status">
+        Activer le compte
+      </label>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+
+    <button 
+      type="submit" 
+      class="btn btn-primary btn-block"
+      [disabled]="registerForm.invalid || isLoading"
+    >
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+      {{ isLoading ? 'Création...' : 'Créer le compte' }}
+    </button>
+    
+    <div class="text-center mt-3">
+      <p>Déjà un compte? <a routerLink="/auth/login">Se connecter</a></p>
+    </div>
+  </form>
+  
+  <div class="footer">
+    <p>&copy; <a href="http://ictech.dev" target="_blank">ICTECH {{year}}</a></p>
+  </div>
+</div>

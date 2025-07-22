@@ -1,5 +1,5 @@
 export interface UserModel {
-    id: number;
+    id?: number;
     fullname: string;
     email: string;
     phone: string;
@@ -10,9 +10,9 @@ export interface UserModel {
     permission: string;
     status: boolean;
     signature: string;
-    entreprise: string;
-    created_at: Date;
-    updated_at: Date;
+    entreprise?: string;
+    created_at?: Date;
+    updated_at?: Date;
 }
 
 export interface LoginRequest {
@@ -21,8 +21,8 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
+    message: string;
     token: string;
-    user: UserModel;
 }
 
 export interface RegisterRequest {
