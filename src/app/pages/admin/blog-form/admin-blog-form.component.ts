@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';  
+import { HttpEventType } from '@angular/common/http';
 import { BlogsService } from '../../blog/blogs.service';
 import { BlogModel } from '../../blog/models/blog.model';
 
@@ -22,6 +23,7 @@ export class AdminBlogFormComponent implements OnInit {
   selectedFiles: File[] = [];
   existingFiles: string[] = [];
   currentBlog: BlogModel | null = null;
+  uploadProgress: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -160,42 +162,49 @@ export class AdminBlogFormComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    // Prepare form data
+    // Use FormData for file uploads
+    const formData = new FormData();
     const formValue = this.blogForm.value;
-    const blogData: Partial<BlogModel> = {
-      title: formValue.title,
-      title_url: formValue.title_url,
-      resume: formValue.resume,
-      content: formValue.content,
-      signature: formValue.signature || 'Admin',
-      keyword: this.keywords
-    };
+    
+    // Append form fields
+    formData.append('title', formValue.title);
+    formData.append('title_url', formValue.title_url);
+    formData.append('resume', formValue.resume);
+    formData.append('content', formValue.content);
+    formData.append('signature', formValue.signature || 'Admin');
+    formData.append('keyword', JSON.stringify(this.keywords));
 
-    // Handle file uploads if any
+    // Handle file uploads
     if (this.selectedFiles.length > 0) {
-      // For now, just add file names to the data
-      // In a real implementation, you would upload files first
-      const fileNames = this.selectedFiles.map(file => file.name);
-      blogData.files = [...(this.existingFiles || []), ...fileNames];
-      console.log('Files to upload:', this.selectedFiles);
-    } else if (this.existingFiles.length > 0) {
-      blogData.files = this.existingFiles;
+      for (let i = 0; i < this.selectedFiles.length; i++) {
+        formData.append('files', this.selectedFiles[i], this.selectedFiles[i].name);
+      }
     }
 
-    console.log('Submitting blog data:', blogData);
+    // Add existing files if in edit mode
+    if (this.isEditMode && this.existingFiles.length > 0) {
+      formData.append('existingFiles', JSON.stringify(this.existingFiles));
+    }
+
+    console.log('Submitting blog data with FormData');
 
     const request = this.isEditMode && this.blogId
-      ? this.blogService.update(this.blogId, blogData)
-      : this.blogService.create(blogData);
+      ? this.blogService.update(this.blogId, formData)
+      : this.blogService.create(formData);
 
     request.subscribe({
-      next: (response: any) => {
-        this.loading = false;
-        console.log('Blog saved successfully:', response);
-        
-        // Show success message or navigate back
-        alert(this.isEditMode ? 'Article mis à jour avec succès!' : 'Article créé avec succès!');
-        this.router.navigate(['/admin/blogs']);
+      next: (event: any) => {
+        if (event.type === HttpEventType.UploadProgress) {
+          this.uploadProgress = Math.round(100 * event.loaded / event.total);
+        } else if (event.type === HttpEventType.Response) {
+          console.log('Blog saved successfully:', event.body);
+          this.uploadProgress = 0; // Reset progress bar after upload
+          this.loading = false;
+          
+          // Show success message or navigate back
+          alert(this.isEditMode ? 'Article mis à jour avec succès!' : 'Article créé avec succès!');
+          this.router.navigate(['/admin/blogs']);
+        }
       },
       error: (error: any) => {
         console.error('Error saving blog:', error);
@@ -203,6 +212,7 @@ export class AdminBlogFormComponent implements OnInit {
           ? 'Erreur lors de la mise à jour de l\'article'
           : 'Erreur lors de la création de l\'article';
         this.loading = false;
+        this.uploadProgress = 0;
       }
     });
   }
@@ -225,6 +235,7 @@ export class AdminBlogFormComponent implements OnInit {
     this.selectedFiles = [];
     this.existingFiles = [];
     this.error = null;
+    this.uploadProgress = 0;
     this.initializeForCreation();
   }
 

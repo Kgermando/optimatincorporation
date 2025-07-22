@@ -232,6 +232,20 @@
                       <a routerLink="/admin/blogs" class="btn btn-secondary">
                         Annuler
                       </a>
+
+                      <!-- Upload Progress Bar -->
+                      <div *ngIf="loading && uploadProgress > 0" class="progress mt-3">
+                        <div 
+                          class="progress-bar progress-bar-striped progress-bar-animated" 
+                          role="progressbar" 
+                          [style.width.%]="uploadProgress" 
+                          [attr.aria-valuenow]="uploadProgress" 
+                          aria-valuemin="0" 
+                          aria-valuemax="100"
+                        >
+                          {{uploadProgress}}%
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
