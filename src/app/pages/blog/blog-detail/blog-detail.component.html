@@ -3,11 +3,13 @@
 <div class="inner-banner inner-bg1">
     <div class="container">
         <div class="inner-title">
-            <h3>Blog Details</h3>
+            <h3>{{ blog?.title || 'Détails du Blog' }}</h3>
             <ul>
-                <li><a routerLink="/">Home</a></li>
+                <li><a routerLink="/">Accueil</a></li>
                 <li><i class='bx bxs-chevrons-right'></i></li>
-                <li>Blog Details</li>
+                <li><a routerLink="/blog">Blog</a></li>
+                <li><i class='bx bxs-chevrons-right'></i></li>
+                <li>{{ blog?.title || 'Détails du Blog' }}</li>
             </ul>
         </div>
     </div>
@@ -32,18 +34,19 @@
                 <!-- Contenu du blog -->
                 <div *ngIf="blog && !loading" class="blog-dtls-content">
                     <div class="blog-dtls-img">
-                        <img [src]="getImageUrl(blog.files)" [alt]="blog.title" 
-                             onerror="this.src='assets/img/blog/blog-dtls.jpg'">
+                        <img [src]="getImageUrl(blog.files)" [alt]="blog.title"
+                            onerror="this.src='assets/img/blog/blog-dtls.jpg'">
                     </div>
 
                     <div class="blog-text">
                         <h2>{{ blog.title }}</h2>
                         <ul>
                             <li><a routerLink="/"><i class='bx bxs-user'></i> {{ blog.signature || 'Admin' }}</a></li>
-                            <li><a routerLink="/"><i class='bx bx-calendar-alt'></i> {{ formatDate(blog.created || blog.CreatedAt || blog.created_at) }}</a></li>
+                            <li><a routerLink="/"><i class='bx bx-calendar-alt'></i> {{ formatDate(blog.created ||
+                                    blog.CreatedAt || blog.created_at) }}</a></li>
                             <li *ngIf="blog.views"><i class='bx bx-show'></i> {{ blog.views }} vues</li>
                         </ul>
-                        
+
                         <!-- Résumé -->
                         <div *ngIf="blog.resume" class="blog-resume">
                             <p><strong>{{ blog.resume }}</strong></p>
@@ -59,20 +62,17 @@
                     </div>
 
                     <!-- Galerie d'images supplémentaires -->
-                    <div *ngIf="blog.files && blog.files.length > 1" class="row bolg-gallery">
-                        <div class="bolg-gallery-item" *ngFor="let file of blog.files.slice(1)">
-                            <img [src]="baseImageUrl + file" [alt]="blog.title" 
-                                 onerror="this.src='assets/img/blog/blog1.jpg'">
+                    <div *ngIf="blog.files && blog.files.length > 1" class="row bolg-gallery mt-4">
+                        <div class="col-md-6 bolg-gallery-item" *ngFor="let file of blog.files.slice(1)">
+                            <img [src]="baseImageUrl + file" [alt]="blog.title" class="img-fluid rounded"
+                                onerror="this.src='assets/img/blog/blog1.jpg'">
                         </div>
                     </div>
-                    <h3>Top 10 Design Trends 2024</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae commodo justo. In vulputate arcu imperdiet  arcu molestie ultrices ac nec tortor. Sed euismod placerat justo, eget suscipit ex accumsan non. Curabitur id faucibus urna, eu tincidunt diam. Nulla malesuada nibh ligula. Cras semper tristique dolor, vitae ultricies massa eleifend sit amet. Proin id eros nisi.</p>
-                    <p>Fusce tristique leo magna, nec bibendum lacus sollicitudin in. Suspendisse augue est, dignissim vel elementum ut, vestibulum eget dui. Sed purus odio, congue sed mi non, viverra commodo magna. Donec at placerat erat. Maecenas vel odio eget urna viverra gravida. Vestibulum risus neque, imperdiet in felis eget, pretium vestibulum nisl. Maecenas ultrices, ipsum eleifend pellentesque pellentesque, velit massa sodales eros, eu faucibus risus justo non est. Aenean non pellentesque ipsum. Mauris varius maximus euismod. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 
-                    <div class="article-footer">
+                    <div class="article-footer mt-4">
                         <div class="article-tags">
                             <span><i class='bx bx-share-alt'></i></span>
-                            <a href="#">Share</a>
+                            <a href="#">Partager</a>
                         </div>
 
                         <div class="article-share">
@@ -84,111 +84,18 @@
                             </ul>
                         </div>
                     </div>
-                    
-                    <div class="post-navigation">
-                        <div class="navigation-links">
-                            <div class="nav-previous">
-                                <a routerLink="/blog-details">Prev Post</a>
-                            </div>
-
-                            <div class="nav-next">
-                                <a routerLink="/blog-details">Next Post</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="comment-area">
-                        <h3 class="comment-title">2 Comments:</h3>
-
-                        <div class="comment-card">
-                            <div class="comment-author-img">
-                                <img src="assets/img/testimonial/testimonial2.jpg" alt="Images">
-                            </div>
-                            <div class="comment-author-title">
-                                <h3>Evanaa</h3>
-                                <span>24 June 2024 10:00 PM</span>
-                            </div>
-                            <div class="comment-body">
-                                <p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ei usmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo.”</p>
-                                <a routerLink="/blog-details" class="reply-btn">Reply</a>
-                            </div>
-                        </div>
-
-                        <div class="comment-card ml-50">
-                            <div class="comment-author-img">
-                                <img src="assets/img/testimonial/testimonial3.jpg" alt="Images">
-                            </div>
-                            <div class="comment-author-title">
-                                <h3>Knot Doe</h3>
-                                <span>24 June 2024 10:30 PM</span>
-                            </div>
-                            <div class="comment-body">
-                                <p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ei usmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo.”</p>
-                                <a routerLink="/blog-details" class="reply-btn">Reply</a>
-                            </div>
-                        </div>
-
-                        <div class="comment-card">
-                            <div class="comment-author-img">
-                                <img src="assets/img/testimonial/testimonial4.jpg" alt="Images">
-                            </div>
-                            <div class="comment-author-title">
-                                <h3>John Smith</h3>
-                                <span>24 June 2024 10:50 PM</span>
-                            </div>
-                            <div class="comment-body">
-                                <p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ei usmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo.”</p>
-                                <a routerLink="/blog-details" class="reply-btn">Reply</a>
-                            </div>
-                        </div>
-
-                        <div class="comment-respond">
-                            <h3 class="comment-respond-title">Leave a Reply</h3>
-
-                            <form class="comment-form">
-                                <p>Your email address will not be published. Required fields are marked *</p>
-
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label>Name *</label>
-                                            <input type="text" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label>Email *</label>
-                                            <input type="text" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-12">
-                                        <div class="form-group">
-                                            <label>Comment *</label>
-                                            <textarea name="Comment" class="form-control textarea-hight" id="Comment" cols="30" rows="5"></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-12 col-md-12">
-                                        <button type="submit" class="post-com-btn">Post A Comment</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <div class="col-lg-4">
                 <div class="widget-area">
                     <div class="widget widget_search">
-                        <h3 class="widget-title">Search Now</h3>
+                        <h3 class="widget-title">Rechercher</h3>
                         <div class="post-wrap">
                             <form class="search-form">
                                 <label>
                                     <span class="screen-reader-text">Search for:</span>
-                                    <input type="search" class="search-field" placeholder="Search...">
+                                    <input type="search" class="search-field" placeholder="Rechercher...">
                                 </label>
                                 <button type="submit"><i class='bx bx-search'></i></button>
                             </form>
@@ -196,38 +103,18 @@
                     </div>
 
                     <section class="widget widget-popular-post">
-                        <h3 class="widget-title">Popular Posts</h3>
-
+                        <h3 class="widget-title">Articles Populaires</h3>
                         <div class="post-wrap">
-                            <article class="item">
-                                <a routerLink="/blog-details" class="thumb"><span class="fullimage cover bg1" role="img"></span></a>
+                            <article class="item" *ngFor="let popularBlog of popularBlogs">
+                                <a [routerLink]="['/blog-details', popularBlog.id]" class="thumb">
+                                    <span class="fullimage cover" role="img" 
+                                          [style.background-image]="'url(' + getImageUrl(popularBlog.files) + ')'"></span>
+                                </a>
                                 <div class="info">
-                                    <time datetime="2024-06-30">Jun 20, 2024</time>
-                                    <h4 class="title usmall"><a routerLink="/blog-details">How can Design Product Packaging in the Industry</a></h4>
-                                </div>
-                            </article>
-
-                            <article class="item">
-                                <a routerLink="/blog-details" class="thumb"><span class="fullimage cover bg2" role="img"></span></a>
-                                <div class="info">
-                                    <time datetime="2024-06-30">Jun 21, 2024</time>
-                                    <h4 class="title usmall"><a routerLink="/blog-details">How Can Choose the Right Color for Cover Package</a></h4>
-                                </div>
-                            </article>
-
-                            <article class="item">
-                                <a routerLink="/blog-details" class="thumb"><span class="fullimage cover bg3" role="img"></span></a>
-                                <div class="info">
-                                    <time datetime="2024-06-30">Jun  22, 2024</time>
-                                    <h4 class="title usmall"><a routerLink="/blog-details">How Can Choose the Best Color for Product Package</a> </h4>
-                                </div>
-                            </article>
-                            
-                            <article class="item">
-                                <a routerLink="/blog-details" class="thumb"><span class="fullimage cover bg4" role="img"></span></a>
-                                <div class="info">
-                                    <time datetime="2024-06-30">Jun 23, 2024</time>
-                                    <h4 class="title usmall"><a routerLink="/blog-details">How Can Make Your Product Cover  Most  Attractive</a></h4>
+                                    <time [dateTime]="formatDate(popularBlog.created)">{{ formatDate(popularBlog.created) }}</time>
+                                    <h4 class="title usmall">
+                                        <a [routerLink]="['/blog-details', popularBlog.id]">{{ popularBlog.title }}</a>
+                                    </h4>
                                 </div>
                             </article>
                         </div>
@@ -235,46 +122,26 @@
 
                     <section class="widget widget_categories">
                         <h3 class="widget-title">Archives</h3>
-
                         <div class="post-wrap">
                             <ul>
-                                <li><a routerLink="/">January <span>2024</span></a></li>
-                                <li><a routerLink="/">February <span>2024</span></a></li>
-                                <li><a routerLink="/">March <span>2024</span></a></li>
-                                <li><a routerLink="/">April <span>2024</span></a></li>
-                                <li><a routerLink="/">May <span>2024</span></a></li>
-                                <li><a routerLink="/">June <span>2024</span></a></li>
+                                <li *ngFor="let archive of archives">
+                                    <a [routerLink]="['/blog']" [queryParams]="{month: archive.month, year: archive.year}">
+                                        {{ archive.monthName }} <span>{{ archive.year }}</span>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </section>
-                    
+
                     <section class="widget widget_categories">
-                        <h3 class="widget-title">Categories</h3>
-
+                        <h3 class="widget-title">Catégories</h3>
                         <div class="post-wrap">
                             <ul>
-                                <li><a routerLink="/">Package Design <span>(10)</span></a></li>
-                                <li><a routerLink="/">T-shirt Design <span>(07)</span></a></li>
-                                <li><a routerLink="/">Cover Van <span>(20)</span></a></li>
-                                <li><a routerLink="/">Mug Design <span>(12)</span></a></li>
-                                <li><a routerLink="/">Book Cover Design <span>(15)</span></a></li>
-                                <li><a routerLink="/">Hoodie Design <span>(18)</span></a></li>
-                            </ul>
-                        </div>
-                    </section>
-
-                    <section class="widget widget_tag">
-                        <h3 class="widget-title">Tags</h3>
-
-                        <div class="post-wrap">
-                            <ul>
-                                <li><a routerLink="/">T-shirt</a></li>
-                                <li><a routerLink="/">Cover</a></li>
-                                <li><a routerLink="/">Great</a></li>
-                                <li><a routerLink="/">Print Media</a></li>
-                                <li><a routerLink="/">Hoodie Design</a></li>
-                                <li><a routerLink="/">Design</a></li>
-                                <li><a routerLink="/">Mug Design</a></li>
+                                <li *ngFor="let category of categories">
+                                    <a [routerLink]="['/blog']" [queryParams]="{category: category.name}">
+                                        {{ category.name }} <span>({{ category.count }})</span>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </section>

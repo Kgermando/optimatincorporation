@@ -127,8 +127,8 @@ export class AdminBlogListComponent implements OnInit {
     return keywords.slice(0, 3); // Show only first 3 keywords
   }
 
-  getBlogId(blog: BlogModel): number {
-    return blog.id || blog.ID;
+  getBlogId(blog: BlogModel): string {
+    return blog.title_url || '';
   }
 
   sortBy(field: string): void {

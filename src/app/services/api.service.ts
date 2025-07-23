@@ -27,7 +27,11 @@ export abstract class ApiService {
   
   // @Cacheable({ cacheBusterObserver: cacheBuster$ })
   getPaginated(page: number, pageSize: number): Observable<ApiResponse> { 
-    const params = {page: page, page_size: pageSize }; 
+    const params = {
+      signature: 'optimatincorporation',
+      page: page,
+      page_size: pageSize
+    };
     return this.http.get<ApiResponse>(`${this.endpoint}/all/paginate`, { params });
   }
  

@@ -171,7 +171,7 @@ export class AdminBlogFormComponent implements OnInit {
     formData.append('title_url', formValue.title_url);
     formData.append('resume', formValue.resume);
     formData.append('content', formValue.content);
-    formData.append('signature', formValue.signature || 'Admin');
+    formData.append('signature', 'optimatincorporation');
     formData.append('keyword', JSON.stringify(this.keywords));
 
     // Handle file uploads

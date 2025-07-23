@@ -28,12 +28,12 @@ export const routes: Routes = [
     { path: 'error', component: ErrorComponent },
     { path: 'cart', component: CartComponent },
     { path: 'checkout', component: CheckoutComponent },
-    { path: 'products/:id', component: ProductDetailComponent },
+    { path: 'products/:title_url', component: ProductDetailComponent },
     { path: 'services', component: ServicesPageComponent },
-    { path: 'services/:id', component: ServiceDetailComponent },
+    { path: 'services/:title_url', component: ServiceDetailComponent },
     { path: 'products', component: ProductsComponent },
     { path: 'blog', component: BlogComponent },
-    { path: 'blog/:id', component: BlogDetailComponent },
+    { path: 'blog-details/:title_url', component: BlogDetailComponent },
     // Auth routes
     {
         path: 'auth', 
@@ -109,7 +109,7 @@ export const routes: Routes = [
         }
     },
     {
-        path: 'admin/blogs/:id/edit', 
+        path: 'admin/blogs/:title_url/edit', 
         component: AdminBlogFormComponent,
         canActivate: [AuthGuard],
         data: {
@@ -148,7 +148,7 @@ export const routes: Routes = [
         }
     },
     {
-        path: 'admin/users/:id/edit', 
+        path: 'admin/users/:title_url/edit', 
         component: AdminUserFormComponent,
         canActivate: [AuthGuard],
         data: {
@@ -179,7 +179,7 @@ export const routes: Routes = [
         }
     },
     {
-        path: 'admin/blogs/:id/edit', 
+        path: 'admin/blogs/:title_url/edit', 
         component: AdminBlogFormComponent,
         canActivate: [AuthGuard],
         data: {

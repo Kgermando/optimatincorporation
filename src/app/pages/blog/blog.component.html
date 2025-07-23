@@ -44,7 +44,7 @@
                     </a>
                     
                     <div class="blog-content">
-                        <a [routerLink]="['/blog-details', blog.id]">
+                        <a [routerLink]="['/blog-details', blog.title_url]">
                             <h3>{{ blog.title }}</h3>
                         </a>
                         <ul class="blog-admin">
@@ -52,7 +52,7 @@
                             <li><i class='bx bx-calendar-alt'></i> {{ formatDate(blog.created || blog.CreatedAt || blog.created_at) }}</li>
                         </ul>
                         <p>{{ blog.resume || 'Découvrez cet article passionnant...' }}</p>
-                        <a [routerLink]="['/blog-details', blog.id]" class="read-more-btn">
+                        <a [routerLink]="['/blog-details', blog.title_url]" class="read-more-btn">
                             Lire plus <i class='bx bxs-chevrons-right'></i>
                         </a>
                     </div>

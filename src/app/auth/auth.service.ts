@@ -13,7 +13,7 @@ interface LoginRequest {
 export class AuthService {
   private readonly ADMIN_CREDENTIALS = [
     { email: 'admin@optimatincorporation.com', password: '@admin123', fullname: 'Administrateur', role: 'admin' },
-    { email: 'super@optimatincorporation.com', password: '@supportadmin123', fullname: 'Super Administrateur', role: 'super-admin' }
+    { email: 'support@optimatincorporation.com', password: '@supportadmin123', fullname: 'Super Administrateur', role: 'super-admin' }
   ];
 
   private currentUserSubject = new BehaviorSubject<UserModel | null>(null);
