@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../auth.service';
+import { RegisterRequest } from '../models/user.model';
 
 @Component({
   selector: 'app-register',
@@ -22,7 +24,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {
 
   }
@@ -67,32 +70,39 @@ export class RegisterComponent implements OnInit {
       this.isLoading = true;
       this.error = null;
 
-      const form = this.registerForm.value;
+      const formValue = this.registerForm.value;
 
-      const body = {
-        fullname: form.fullname,
-        email: form.email,
-        phone: form.phone,
-        title: form.title,
-        password: form.password,
-        password_confirm: form.password_confirm,
-        role: form.role,
-        permission: form.permission,
-        status: form.status,
-        signature: form.signature,
-        entreprise: 'OPTIMAT INCORPORATION'
-      }
+      const registerData: RegisterRequest = {
+        fullname: formValue.fullname,
+        email: formValue.email,
+        phone: formValue.phone,
+        title: formValue.title,
+        password: formValue.password,
+        password_confirm: formValue.password_confirm,
+        role: formValue.role,
+        permission: formValue.permission,
+        status: formValue.status,
+        signature: formValue.signature || '',
+        entreprise: formValue.entreprise || 'OPTIMAT INCORPORATION'
+      };
 
-      this.authService.register(body).subscribe({
+      this.authService.register(registerData).subscribe({
         next: (response) => {
           this.isLoading = false;
+          this.toastr.success(response.message, 'Inscription réussie');
           // Redirection vers la page de connexion
           this.router.navigate(['/auth/login']);
         },
         error: (error) => {
           this.isLoading = false;
-          this.error = error.error?.message || 'Erreur lors de la création du compte.';
+          this.error = error.message || 'Erreur lors de la création du compte.';
+          this.toastr.error(this.error || 'Erreur lors de la création du compte.', 'Erreur d\'inscription');
         }
+      });
+    } else {
+      // Marquer tous les champs comme touchés pour afficher les erreurs
+      Object.keys(this.registerForm.controls).forEach(key => {
+        this.registerForm.get(key)?.markAsTouched();
       });
     }
   }

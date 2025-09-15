@@ -1,96 +1,116 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { UserModel } from './models/user.model';
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { 
+  UserModel, 
+  LoginRequest, 
+  LoginResponse, 
+  RegisterRequest, 
+  RegisterResponse,
+  UpdateInfoRequest,
+  UpdateInfoResponse,
+  ChangePasswordRequest,
+  ChangePasswordResponse,
+  ForgotPasswordRequest,
+  ResetPasswordRequest,
+  ApiError
+} from './models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly ADMIN_CREDENTIALS = [
-    { email: 'admin@optimatincorporation.com', password: '@admin123', fullname: 'Administrateur', role: 'admin' },
-    { email: 'support@optimatincorporation.com', password: '@supportadmin123', fullname: 'Super Administrateur', role: 'super-admin' }
-  ];
 
+  private readonly API_URL = `${environment.apiUrl}/auth`;
   private currentUserSubject = new BehaviorSubject<UserModel | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor() {
+  constructor(private http: HttpClient) {
     // Charger l'utilisateur depuis le localStorage au démarrage
     this.loadUserFromStorage();
   }
 
   private loadUserFromStorage(): void {
     if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
       const userData = localStorage.getItem('currentUser');
-      if (userData) {
+      
+      if (token && userData) {
         try {
           const user = JSON.parse(userData);
           this.currentUserSubject.next(user);
         } catch (error) {
           console.error('Erreur lors du chargement des données utilisateur:', error);
-          localStorage.removeItem('currentUser');
+          this.clearStorage();
         }
       }
     }
   }
 
-  login(credentials: LoginRequest): Observable<{ success: boolean; message: string; user?: UserModel }> {
-    const { email, password } = credentials;
-    
-    // Rechercher les identifiants dans la liste des admins
-    const adminUser = this.ADMIN_CREDENTIALS.find(
-      admin => admin.email === email && admin.password === password
-    );
-
-    if (adminUser) {
-      const user: UserModel = {
-        id: 1,
-        fullname: adminUser.fullname,
-        email: adminUser.email,
-        phone: '',
-        title: 'Administrateur',
-        password: '',
-        password_confirm: '',
-        role: adminUser.role,
-        permission: 'all',
-        status: true,
-        signature: '',
-        entreprise: 'Optimat Incorporation'
-      };
-
-      // Sauvegarder dans le localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        localStorage.setItem('isAuthenticated', 'true');
-      }
-
-      this.currentUserSubject.next(user);
-
-      return of({ 
-        success: true, 
-        message: 'Connexion réussie', 
-        user 
-      });
-    } else {
-      return of({ 
-        success: false, 
-        message: 'Email ou mot de passe incorrect' 
-      });
+  private clearStorage(): void {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token');
+      localStorage.removeItem('currentUser');
     }
   }
 
-  register(data: any): Observable<any> {
-    // Pour la compatibilité, mais non utilisé dans le système simple
-    return of({ success: false, message: 'Inscription non disponible' });
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'Une erreur est survenue';
+    
+    if (error.error?.message) {
+      errorMessage = error.error.message;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+    
+    return throwError(() => ({ message: errorMessage }));
+  }
+
+  login(credentials: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.API_URL}/login`, credentials)
+      .pipe(
+        tap(response => {
+          if (response.data?.token && response.data?.user) {
+            // Sauvegarder le token et les données utilisateur
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('token', response.data.token);
+              localStorage.setItem('currentUser', JSON.stringify(response.data.user));
+            }
+            this.currentUserSubject.next(response.data.user);
+          }
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  register(data: RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(`${this.API_URL}/register`, data)
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   user(): Observable<UserModel | null> {
-    return of(this.currentUserSubject.value);
+    const token = this.getToken();
+    if (!token) {
+      return throwError(() => ({ message: 'Token manquant' }));
+    }
+
+    return this.http.get<UserModel>(`${this.API_URL}/user`, {
+      params: { token }
+    }).pipe(
+      tap(user => {
+        if (user) {
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+          }
+          this.currentUserSubject.next(user);
+        }
+      }),
+      catchError(this.handleError)
+    );
   }
 
   getCurrentUser(): UserModel | null {
@@ -99,49 +119,89 @@ export class AuthService {
 
   getToken(): string | null {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('isAuthenticated');
+      return localStorage.getItem('token');
     }
     return null;
   }
 
-  isAuthentification(): boolean {
+  isAuthentication(): boolean {
     if (typeof window !== 'undefined') {
-      const isAuth = localStorage.getItem('isAuthenticated');
+      const token = localStorage.getItem('token');
       const userData = localStorage.getItem('currentUser');
-      return isAuth === 'true' && !!userData;
+      return !!token && !!userData;
     }
     return false;
   }
 
-  logout(): Observable<void> {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('currentUser');
-      localStorage.removeItem('isAuthenticated');
-    }
-    this.currentUserSubject.next(null);
-    return of(void 0);
+  logout(): Observable<any> {
+    return this.http.post(`${this.API_URL}/logout`, {})
+      .pipe(
+        tap(() => {
+          this.clearStorage();
+          this.currentUserSubject.next(null);
+        }),
+        catchError((error) => {
+          // Même en cas d'erreur, on déconnecte localement
+          this.clearStorage();
+          this.currentUserSubject.next(null);
+          return throwError(() => error);
+        })
+      );
   }
 
-  updateInfo(data: any): Observable<UserModel> {
-    // Pour la compatibilité
-    const currentUser = this.currentUserSubject.value;
-    if (currentUser) {
-      const updatedUser = { ...currentUser, ...data };
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-      }
-      this.currentUserSubject.next(updatedUser);
-      return of(updatedUser);
+  updateInfo(data: UpdateInfoRequest): Observable<UpdateInfoResponse> {
+    const token = this.getToken();
+    if (!token) {
+      return throwError(() => ({ message: 'Token manquant' }));
     }
-    throw new Error('Aucun utilisateur connecté');
+
+    return this.http.put<UpdateInfoResponse>(`${this.API_URL}/update-info`, data, {
+      params: { token }
+    }).pipe(
+      tap(response => {
+        if (response.data) {
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('currentUser', JSON.stringify(response.data));
+          }
+          this.currentUserSubject.next(response.data);
+        }
+      }),
+      catchError(this.handleError)
+    );
   }
 
-  updatePassword(data: any): Observable<UserModel> {
-    // Pour la compatibilité
-    const currentUser = this.currentUserSubject.value;
-    if (currentUser) {
-      return of(currentUser);
+  updatePassword(data: ChangePasswordRequest): Observable<ChangePasswordResponse> {
+    const token = this.getToken();
+    if (!token) {
+      return throwError(() => ({ message: 'Token manquant' }));
     }
-    throw new Error('Aucun utilisateur connecté');
+
+    return this.http.put<ChangePasswordResponse>(`${this.API_URL}/change-password`, data, {
+      params: { token }
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  forgotPassword(data: ForgotPasswordRequest): Observable<any> {
+    return this.http.post(`${this.API_URL}/forgot-password`, data)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  resetPassword(token: string, data: ResetPasswordRequest): Observable<any> {
+    return this.http.post(`${this.API_URL}/reset/${token}`, data)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  // Méthode pour créer un utilisateur admin (développement seulement)
+  createAdmin(): Observable<any> {
+    return this.http.post(`${this.API_URL}/create-admin`, {})
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 }

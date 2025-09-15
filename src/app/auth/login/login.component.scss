@@ -48,6 +48,21 @@
   box-sizing: border-box;
 }
 
+.auth-links {
+  text-align: center;
+  margin: 15px 0;
+}
+
+.forgot-password-link {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 14px;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .form-control:focus {
   border-color: #667eea;
   outline: none;

@@ -48,6 +48,11 @@
       {{ isLoading ? 'Connexion...' : 'Se connecter' }}
     </button>
     
+    
+    <div class="auth-links">
+      <a routerLink="/auth/forgot-password" class="forgot-password-link">Mot de passe oublié ?</a>
+    </div>
+
     <div *ngIf="canShowRegisterLink" class="text-center mt-3">
       <p>Pas encore de compte? <a routerLink="/auth/register">Créer un compte</a></p>
     </div>

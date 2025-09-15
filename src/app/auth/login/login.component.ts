@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     // Vérifier si l'utilisateur est déjà connecté
-    if (this.authService.isAuthentification()) {
+    if (this.authService.isAuthentication()) {
       this.router.navigate(['/admin']);
     }
   }
@@ -105,24 +105,20 @@ export class LoginComponent implements OnInit {
       next: (response) => { 
         this.isLoading = false;
         
-        if (response.success && response.user) {
-          console.log('Connexion réussie:', response);
-          this.toastr.success(`Bienvenue ${response.user.fullname}! 🎉`, 'Connexion réussie');
-          
-          // Redirection vers l'admin
-          if (response.user.role === 'admin' || response.user.role === 'super-admin') {
-            this.router.navigate(['/admin']);
-          } else {
-            this.router.navigate(['/dashboard']);
-          }
+        console.log('Connexion réussie:', response);
+        this.toastr.success(`Bienvenue ${response.data.user.fullname}! 🎉`, response.message);
+        
+        // Redirection vers l'admin
+        if (response.data.user.role === 'Admin' || response.data.user.role === 'Super-Admin') {
+          this.router.navigate(['/admin']);
         } else {
-          this.toastr.error(response.message, 'Erreur de connexion');
+          this.router.navigate(['/dashboard']);
         }
       },
       error: (error) => {
         this.isLoading = false;
         console.error('Erreur de connexion:', error);
-        this.toastr.error('Une erreur est survenue lors de la connexion', 'Erreur');
+        this.toastr.error(error.message || 'Une erreur est survenue lors de la connexion', 'Erreur de connexion');
       }
     });
   }
