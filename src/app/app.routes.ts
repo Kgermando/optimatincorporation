@@ -165,31 +165,5 @@ export const routes: Routes = [
         redirectTo: '/admin/dashboard', 
         pathMatch: 'full'
     },
-    {
-        path: 'admin/blogs/create', 
-        component: AdminBlogFormComponent,
-        canActivate: [AuthGuard],
-        data: {
-            title: 'Créer un article',
-            metatags: {
-                description: 'Créer un nouvel article de blog',
-                keywords: 'admin, blog, créer',
-                robots: 'noindex, nofollow'
-            }
-        }
-    },
-    {
-        path: 'admin/blogs/:title_url/edit', 
-        component: AdminBlogFormComponent,
-        canActivate: [AuthGuard],
-        data: {
-            title: 'Modifier un article',
-            metatags: {
-                description: 'Modifier un article de blog',
-                keywords: 'admin, blog, modifier',
-                robots: 'noindex, nofollow'
-            }
-        }
-    },
     { path: '**', redirectTo: '/error' }
 ];

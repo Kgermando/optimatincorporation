@@ -75,7 +75,7 @@
               "public/assets/js/custom.js"
           ],
             "server": "src/main.server.ts",
-            "prerender": true,
+            "prerender": false,
             "ssr": {
               "entry": "src/server.ts"
             }
