@@ -1,0 +1,64 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <div>
+      <h1>{{ isEdit ? 'Modifier le projet' : 'Nouveau projet' }}</h1>
+    </div>
+    <a routerLink="/admin/portfolio" class="btn btn-ghost">← Retour</a>
+  </div>
+
+  @if (error()) { <div class="alert alert-error">{{ error() }}</div> }
+
+  <form (ngSubmit)="save()" #form="ngForm" novalidate class="admin-form card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Titre *</label>
+        <input type="text" class="form-control" [(ngModel)]="item.title" name="title" required>
+      </div>
+      <div class="form-group">
+        <label>Client</label>
+        <input type="text" class="form-control" [(ngModel)]="item.client" name="client">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Catégorie</label>
+        <select class="form-control" [(ngModel)]="item.category" name="category">
+          @for (cat of categories; track cat) {
+            <option [value]="cat">{{ cat }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Année</label>
+        <input type="number" class="form-control" [(ngModel)]="item.year" name="year">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea class="form-control" [(ngModel)]="item.description" name="description" rows="4"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Image de couverture</label>
+        <input type="file" class="form-control" accept="image/*" (change)="uploadCover($event)">
+        @if (uploadingCover()) { <small>Upload en cours...</small> }
+        @if (item.cover_url) { <img [src]="item.cover_url" style="margin-top:8px;height:80px;border-radius:8px"> }
+      </div>
+      <div class="form-group">
+        <label>Lien vidéo (YouTube/Vimeo)</label>
+        <input type="url" class="form-control" [(ngModel)]="item.video_url" name="video_url">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Tags (séparés par des virgules)</label>
+      <input type="text" class="form-control" [(ngModel)]="tagsInput" name="tags" placeholder="3D, Animation, Cinéma">
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || loading()">
+        {{ loading() ? 'Enregistrement...' : 'Enregistrer' }}
+      </button>
+      <a routerLink="/admin/portfolio" class="btn btn-ghost">Annuler</a>
+    </div>
+  </form>
+</div>

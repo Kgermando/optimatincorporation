@@ -1,0 +1,113 @@
+<!-- Page Banner -->
+<div class="page-banner">
+  <div class="page-banner__bg"></div>
+  <div class="page-banner__content">
+    <span class="section-label">Services</span>
+    <h1>Des services <span class="gradient-text">exceptionnels</span></h1>
+    <nav class="breadcrumb" aria-label="Fil d'Ariane">
+      <a routerLink="/">Accueil</a>
+      <span class="breadcrumb__sep">›</span>
+      <span>Services</span>
+    </nav>
+  </div>
+</div>
+
+<!-- Intro -->
+<section class="section--sm" style="background: var(--color-surface);">
+  <div class="container">
+    <div class="section-header" appReveal>
+      <span class="section-label">Ce que nous faisons</span>
+      <h2>Découvrez nos services exceptionnels</h2>
+      <span class="accent-line"></span>
+      <p>
+        Nous nous engageons à fournir des services de haute qualité, en mettant l'accent sur l'innovation,
+        la créativité et la satisfaction de nos clients. Chaque projet est réalisé avec une attention
+        particulière aux détails et une passion pour l'excellence.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Services Grid -->
+<section class="section">
+  <div class="container">
+    @if (loading()) {
+      <div class="services-grid">
+        @for (n of [1,2,3,4,5,6]; track n) {
+          <div class="skeleton" style="height: 280px; border-radius: 20px;"></div>
+        }
+      </div>
+    } @else {
+      <div class="services-grid">
+        @for (service of services(); track service.id; let i = $index) {
+          <div class="service-card card" appReveal [class]="'reveal-delay-' + ((i % 3) + 1)">
+            <div class="service-card__header">
+              <div class="service-card__icon">
+                @if (service.icon) {
+                  <span>{{ service.icon }}</span>
+                } @else {
+                  <mat-icon>layers</mat-icon>
+                }
+              </div>
+              <div>
+                <h3>{{ service.title }}</h3>
+                <span class="service-card__sub">{{ service.subtitle }}</span>
+              </div>
+            </div>
+            <p>{{ service.description }}</p>
+            @if (service.features.length) {
+              <ul class="service-card__features">
+                @for (f of service.features; track f) {
+                  <li>
+                    <mat-icon class="service-card__check">check</mat-icon>
+                    {{ f }}
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Process -->
+<section class="section" style="background: var(--color-surface);">
+  <div class="container">
+    <div class="section-header" appReveal>
+      <span class="section-label">Notre Processus</span>
+      <h2>Comment nous <span class="gradient-text">travaillons</span></h2>
+      <span class="accent-line"></span>
+    </div>
+
+    <div class="process-grid">
+      @for (step of [
+        { num: '01', title: 'Briefing', desc: 'Nous discutons de votre projet, vos besoins et votre vision.' },
+        { num: '02', title: 'Concept', desc: 'Notre équipe développe le concept créatif et le storyboard.' },
+        { num: '03', title: 'Production', desc: 'Modélisation, animation et rendu 3D de haute qualité.' },
+        { num: '04', title: 'Livraison', desc: 'Validation finale et livraison dans les délais convenus.' }
+      ]; track step.num; let i = $index) {
+        <div class="process-step" appReveal [class]="'reveal-delay-' + (i + 1)">
+          <span class="process-step__num gradient-text">{{ step.num }}</span>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.desc }}</p>
+          @if (i < 3) {
+            <div class="process-step__arrow">→</div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section--sm">
+  <div class="container">
+    <div class="cta-block" appReveal>
+      <h2>Prêt à démarrer votre projet ?</h2>
+      <p>Contactez-nous pour un devis gratuit et découvrons ensemble comment concrétiser votre vision.</p>
+      <a routerLink="/contact" class="btn btn-primary btn-lg">Demander un devis</a>
+    </div>
+  </div>
+</section>

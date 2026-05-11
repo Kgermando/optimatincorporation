@@ -1,0 +1,368 @@
+/* =========================================================
+   OPTIMAT — Splash Screen
+   ========================================================= */
+
+// ── Brand tokens (alignés sur styles.scss)
+$bg:          #04091e;
+$primary:     #00b4ff;
+$secondary:   #ff3d9a;
+$gold:        #ffd700;
+$text:        #e8f0ff;
+$font-head:   'Space Grotesk', sans-serif;
+
+// ── Overlay principal
+.splash-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: $bg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  transition: opacity 0.9s cubic-bezier(.4,0,.2,1),
+              transform 0.9s cubic-bezier(.4,0,.2,1);
+
+  &.hiding {
+    opacity: 0;
+    transform: scale(1.06);
+    pointer-events: none;
+  }
+}
+
+// ── Rayons de lumière arrière-plan
+.bg-rays {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.ray {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  transform-origin: bottom center;
+  opacity: 0.08;
+  animation: rayPulse 6s ease-in-out infinite;
+
+  &-1 {
+    height: 120vh;
+    background: linear-gradient(to top, transparent, $primary);
+    transform: translateX(-50%) rotate(0deg);
+    animation-delay: 0s;
+  }
+  &-2 {
+    height: 100vh;
+    background: linear-gradient(to top, transparent, $secondary);
+    transform: translateX(-50%) rotate(72deg);
+    animation-delay: 1s;
+  }
+  &-3 {
+    height: 110vh;
+    background: linear-gradient(to top, transparent, $gold);
+    transform: translateX(-50%) rotate(144deg);
+    animation-delay: 2s;
+  }
+}
+@keyframes rayPulse {
+  0%, 100% { opacity: 0.06; }
+  50%       { opacity: 0.18; }
+}
+
+// ── Particules flottantes
+.particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+  animation: floatParticle linear infinite;
+  filter: blur(0.5px);
+}
+@keyframes floatParticle {
+  0%   { opacity: 0;    transform: translateY(20px) scale(0); }
+  20%  { opacity: 0.8; }
+  80%  { opacity: 0.6; }
+  100% { opacity: 0;    transform: translateY(-80px) scale(1.4); }
+}
+
+// ── Contenu central
+.splash-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+// ── Anneaux orbitaux
+.orbit-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 1px solid rgba($primary, 0.15);
+  transform: translate(-50%, -50%) rotateX(70deg);
+  animation: orbitSpin linear infinite;
+
+  &.orbit-outer  { width: 360px; height: 360px; animation-duration: 12s; border-color: rgba($primary,  0.12); }
+  &.orbit-middle { width: 280px; height: 280px; animation-duration: 8s;  border-color: rgba($secondary,0.12); animation-direction: reverse; }
+  &.orbit-inner  { width: 210px; height: 210px; animation-duration: 5s;  border-color: rgba($gold,     0.10); }
+}
+@keyframes orbitSpin {
+  from { transform: translate(-50%, -50%) rotateX(70deg) rotateZ(0deg); }
+  to   { transform: translate(-50%, -50%) rotateX(70deg) rotateZ(360deg); }
+}
+
+// ── Points orbitaux
+@mixin orb-dot($size, $ring-r, $color, $dur, $delay) {
+  position: absolute;
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+  background: $color;
+  box-shadow: 0 0 8px 2px $color;
+  top: 50%;
+  left: 50%;
+  transform-origin: 0 0;
+  animation: dotOrbit $dur linear $delay infinite;
+
+  @keyframes dotOrbit {
+    from { transform: translate(-50%, -50%) rotate(0deg) translateX($ring-r) rotate(0deg); }
+    to   { transform: translate(-50%, -50%) rotate(360deg) translateX($ring-r) rotate(-360deg); }
+  }
+}
+.orbital-dot {
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+}
+.dot-1 {
+  width: 8px; height: 8px;
+  background: $primary;
+  box-shadow: 0 0 10px 3px $primary;
+  animation: dotOrbit1 12s linear 0s infinite;
+}
+.dot-2 {
+  width: 6px; height: 6px;
+  background: $secondary;
+  box-shadow: 0 0 8px 2px $secondary;
+  animation: dotOrbit2 8s linear 0.5s infinite;
+}
+.dot-3 {
+  width: 5px; height: 5px;
+  background: $gold;
+  box-shadow: 0 0 7px 2px $gold;
+  animation: dotOrbit3 5s linear 1s infinite;
+}
+@keyframes dotOrbit1 {
+  from { transform: translate(-50%,-50%) rotate(0deg)   translateX(180px) rotate(0deg); }
+  to   { transform: translate(-50%,-50%) rotate(360deg) translateX(180px) rotate(-360deg); }
+}
+@keyframes dotOrbit2 {
+  from { transform: translate(-50%,-50%) rotate(0deg)   translateX(140px) rotate(0deg); }
+  to   { transform: translate(-50%,-50%) rotate(360deg) translateX(140px) rotate(-360deg); }
+}
+@keyframes dotOrbit3 {
+  from { transform: translate(-50%,-50%) rotate(0deg)   translateX(105px) rotate(0deg); }
+  to   { transform: translate(-50%,-50%) rotate(360deg) translateX(105px) rotate(-360deg); }
+}
+
+// ── Scène logo 3D
+.logo-stage {
+  perspective: 800px;
+  width: 160px;
+  height: 160px;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 0;
+}
+
+.logo-3d-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: logo3dSpin 4s ease-in-out infinite;
+}
+
+@keyframes logo3dSpin {
+  0%   { transform: rotateY(0deg)   rotateX(0deg); }
+  25%  { transform: rotateY(90deg)  rotateX(8deg); }
+  50%  { transform: rotateY(180deg) rotateX(0deg); }
+  75%  { transform: rotateY(270deg) rotateX(-8deg); }
+  100% { transform: rotateY(360deg) rotateX(0deg); }
+}
+
+.logo-glow-backdrop {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba($primary, 0.4) 0%, rgba($secondary, 0.15) 50%, transparent 75%);
+  filter: blur(18px);
+  animation: glowPulse 2.5s ease-in-out infinite alternate;
+  z-index: 0;
+}
+@keyframes glowPulse {
+  from { opacity: 0.6; transform: scale(0.9); }
+  to   { opacity: 1;   transform: scale(1.15); }
+}
+
+.logo-icon-3d {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+  filter:
+    drop-shadow(0 0 24px rgba($primary, 0.8))
+    drop-shadow(0 0 8px  rgba($secondary, 0.5));
+  animation: logoEntrance 0.8s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes logoEntrance {
+  from { opacity: 0; transform: scale(0.4) translateY(20px); }
+  to   { opacity: 1; transform: scale(1)   translateY(0); }
+}
+
+.logo-reflection {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 30px;
+  background: radial-gradient(ellipse, rgba($primary, 0.35) 0%, transparent 70%);
+  filter: blur(6px);
+  z-index: 0;
+}
+
+// ── Texte de marque
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 48px;
+  z-index: 2;
+}
+
+.brand-name {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0;
+  line-height: 1;
+}
+
+.brand-letter {
+  font-family: $font-head;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: transparent;
+  background: linear-gradient(135deg, $text 0%, $primary 50%, $secondary 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0;
+  transform: translateY(30px) rotateX(-60deg);
+  animation: letterReveal 0.5s cubic-bezier(.34,1.56,.64,1) forwards;
+  display: inline-block;
+
+  &.space {
+    width: 0.5em;
+  }
+}
+@keyframes letterReveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px) rotateX(-60deg);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg);
+    filter: blur(0);
+  }
+}
+
+.brand-tagline {
+  font-family: $font-head;
+  font-size: clamp(0.65rem, 2vw, 0.85rem);
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba($text, 0.45);
+  opacity: 0;
+  animation: fadeInUp 0.6s ease 1.8s forwards;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Séparateur décoratif
+.brand-text::after {
+  content: '';
+  display: block;
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, $primary 40%, $secondary 60%, transparent);
+  margin-top: 4px;
+  opacity: 0;
+  animation: fadeInUp 0.5s ease 2.0s forwards;
+}
+
+// ── Barre de progression
+.progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 40px;
+  opacity: 0;
+  animation: fadeInUp 0.5s ease 2.2s forwards;
+  z-index: 2;
+}
+
+.progress-track {
+  width: clamp(200px, 40vw, 300px);
+  height: 3px;
+  background: rgba($primary, 0.12);
+  border-radius: 99px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, $primary, $secondary);
+  border-radius: 99px;
+  transition: width 0.1s linear;
+  position: relative;
+}
+
+.progress-glow {
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: $secondary;
+  box-shadow: 0 0 10px 4px $secondary;
+}
+
+.progress-pct {
+  font-family: $font-head;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba($text, 0.5);
+  letter-spacing: 0.05em;
+  min-width: 36px;
+  text-align: right;
+}

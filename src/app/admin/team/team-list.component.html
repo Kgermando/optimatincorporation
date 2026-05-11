@@ -1,0 +1,40 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <div>
+      <h1>Équipe</h1>
+      <p>Gérez les membres de l'équipe</p>
+    </div>
+    <a routerLink="/admin/team/new" class="btn btn-primary">+ Ajouter un membre</a>
+  </div>
+
+  <div class="admin-table-wrapper card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Photo</th>
+          <th>Nom</th>
+          <th>Poste</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (m of items(); track m.id) {
+          <tr>
+            <td>
+              <img [src]="m.photo_url" [alt]="m.name" class="table-avatar"
+                   onerror="this.style.opacity='0'">
+            </td>
+            <td>{{ m.name }}</td>
+            <td>{{ m.position }}</td>
+            <td class="table-actions">
+              <a [routerLink]="['/admin/team', m.id, 'edit']" class="btn btn-ghost btn-sm">Modifier</a>
+              <button class="btn btn-danger btn-sm" (click)="delete(m.id!)">Supprimer</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="text-center text-muted">Aucun membre.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

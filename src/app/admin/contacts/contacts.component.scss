@@ -1,0 +1,14 @@
+.unread td {
+  color: var(--color-text) !important;
+}
+
+.unread td:first-child strong {
+  color: var(--color-primary-light);
+}
+
+.cell-truncate {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

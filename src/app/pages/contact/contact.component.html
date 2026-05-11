@@ -1,0 +1,146 @@
+<!-- Page Banner -->
+<div class="page-banner">
+  <div class="page-banner__bg"></div>
+  <div class="page-banner__content">
+    <span class="section-label">Contact</span>
+    <h1>Travaillons <span class="gradient-text">ensemble</span></h1>
+    <nav class="breadcrumb" aria-label="Fil d'Ariane">
+      <a routerLink="/">Accueil</a>
+      <span class="breadcrumb__sep">›</span>
+      <span>Contact</span>
+    </nav>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-grid">
+      <!-- Info -->
+      <div class="contact-info" appReveal>
+        <span class="section-label">Contactez-nous</span>
+        <h2>Contactez-nous pour plus d'informations</h2>
+        <div class="accent-line" style="margin: 16px 0;"></div>
+        <p>
+          Vous pouvez nous contacter à tout moment. Notre équipe vous répondra dans les 24 heures.
+        </p>
+
+        <div class="contact-info__items">
+          <div class="contact-info__item">
+            <div class="contact-info__icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <strong>Adresse</strong>
+              <span>Kinshasa, République Démocratique du Congo</span>
+            </div>
+          </div>
+
+          <div class="contact-info__item">
+            <div class="contact-info__icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <strong>Email</strong>
+              <a href="mailto:contact@optimatincorporation.com">contact&#64;optimatincorporation.com</a>
+            </div>
+          </div>
+
+          <div class="contact-info__item">
+            <div class="contact-info__icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.07 6.07l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div>
+              <strong>Téléphone</strong>
+              <a href="tel:+243000000000">+243 000 000 000</a>
+            </div>
+          </div>
+
+          <div class="contact-info__item">
+            <div class="contact-info__icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <strong>Heures d'ouverture</strong>
+              <span>Lun — Ven : 8h00 — 18h00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="contact-form" appReveal class="reveal-delay-2">
+        @if (submitted()) {
+          <div class="contact-success">
+            <div class="contact-success__icon">
+              <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h3>Message envoyé !</h3>
+            <p>Merci pour votre message. Notre équipe vous répondra dans les plus brefs délais.</p>
+            <button class="btn btn-outline" (click)="submitted.set(false)">Envoyer un autre message</button>
+          </div>
+        } @else {
+          <form (ngSubmit)="send()" #contactForm="ngForm" novalidate>
+            <h3 class="contact-form__title">Envoyez-nous un message</h3>
+
+            @if (error()) {
+              <div class="alert alert-error">{{ error() }}</div>
+            }
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label for="name">Votre nom *</label>
+                <input id="name" type="text" class="form-control" [(ngModel)]="form.name" name="name"
+                       placeholder="Votre nom complet" required #nameInput="ngModel">
+                @if (nameInput.invalid && nameInput.touched) {
+                  <span style="color:var(--color-error);font-size:0.8rem">Ce champ est requis</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input id="email" type="email" class="form-control" [(ngModel)]="form.email" name="email"
+                       placeholder="votre@email.com" required email #emailInput="ngModel">
+                @if (emailInput.invalid && emailInput.touched) {
+                  <span style="color:var(--color-error);font-size:0.8rem">Email invalide</span>
+                }
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label for="phone">Téléphone</label>
+                <input id="phone" type="tel" class="form-control" [(ngModel)]="form.phone" name="phone"
+                       placeholder="+243 ...">
+              </div>
+
+              <div class="form-group">
+                <label for="subject">Sujet *</label>
+                <input id="subject" type="text" class="form-control" [(ngModel)]="form.subject" name="subject"
+                       placeholder="Sujet de votre message" required #subjectInput="ngModel">
+                @if (subjectInput.invalid && subjectInput.touched) {
+                  <span style="color:var(--color-error);font-size:0.8rem">Ce champ est requis</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message *</label>
+              <textarea id="message" class="form-control" [(ngModel)]="form.message" name="message"
+                        placeholder="Décrivez votre projet ou votre question..."
+                        rows="6" required #msgInput="ngModel"></textarea>
+              @if (msgInput.invalid && msgInput.touched) {
+                <span style="color:var(--color-error);font-size:0.8rem">Ce champ est requis</span>
+              }
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" style="width:100%"
+                    [disabled]="contactForm.invalid || submitting()">
+              @if (submitting()) { Envoi en cours... }
+              @else { Envoyer le message }
+            </button>
+          </form>
+        }
+      </div>
+    </div>
+  </div>
+</section>

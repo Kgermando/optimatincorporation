@@ -1,0 +1,91 @@
+<!-- Page Banner -->
+<div class="page-banner">
+  <div class="page-banner__bg"></div>
+  <div class="page-banner__content">
+    <span class="section-label">Notre Équipe</span>
+    <h1>Rencontrez nos <span class="gradient-text">talents</span></h1>
+    <nav class="breadcrumb" aria-label="Fil d'Ariane">
+      <a routerLink="/">Accueil</a>
+      <span class="breadcrumb__sep">›</span>
+      <span>Notre Équipe</span>
+    </nav>
+  </div>
+</div>
+
+<!-- Intro -->
+<section class="section--sm" style="background: var(--color-surface);">
+  <div class="container">
+    <div class="section-header" appReveal>
+      <span class="section-label">Les experts derrière OPTIMAT</span>
+      <h2>Une équipe de passionnés dédiés à l'excellence</h2>
+      <span class="accent-line"></span>
+      <p>
+        Nous sommes une équipe de passionnés d'animation 3D, de graphistes talentueux,
+        et de techniciens expérimentés. Nous sommes dédiés à la création de contenus visuels innovants.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Team Grid -->
+<section class="section">
+  <div class="container">
+    @if (loading()) {
+      <div class="team-grid">
+        @for (_ of [1,2,3,4,5,6,7,8]; track $index) {
+          <div class="skeleton" style="height: 340px; border-radius: 20px;"></div>
+        }
+      </div>
+    } @else if (members().length) {
+      <div class="team-grid">
+        @for (member of members(); track member.id; let i = $index) {
+          <div class="team-card card" appReveal [class]="'reveal-delay-' + ((i % 4) + 1)">
+            <div class="team-card__photo">
+              <img [src]="member.photo_url" [alt]="member.name" loading="lazy"
+                   onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'300\' viewBox=\'0 0 300 300\'><rect fill=\'%230e0e22\' width=\'300\' height=\'300\'/><circle cx=\'150\' cy=\'120\' r=\'60\' fill=\'%231e1e40\'/%3E<ellipse cx=\'150\' cy=\'260\' rx=\'100\' ry=\'60\' fill=\'%231e1e40\'/%3E</svg>'">
+              <div class="team-card__overlay">
+                @if (member.social_facebook) {
+                  <a [href]="member.social_facebook" target="_blank" rel="noopener" class="team-card__social">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                  </a>
+                }
+                @if (member.social_instagram) {
+                  <a [href]="member.social_instagram" target="_blank" rel="noopener" class="team-card__social">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                  </a>
+                }
+                @if (member.social_linkedin) {
+                  <a [href]="member.social_linkedin" target="_blank" rel="noopener" class="team-card__social">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+                  </a>
+                }
+              </div>
+            </div>
+            <div class="team-card__info">
+              <h3>{{ member.name }}</h3>
+              <span class="team-card__role">{{ member.position }}</span>
+              @if (member.bio) {
+                <p>{{ member.bio }}</p>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <p>Aucun membre disponible pour le moment.</p>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Join CTA -->
+<section class="section--sm" style="background: var(--color-surface);">
+  <div class="container">
+    <div class="cta-block" appReveal>
+      <h2>Vous voulez rejoindre notre équipe ?</h2>
+      <p>OPTIMAT est toujours à la recherche de talents passionnés par l'animation 3D et le graphisme.</p>
+      <a routerLink="/contact" class="btn btn-primary btn-lg">Nous contacter</a>
+    </div>
+  </div>
+</section>

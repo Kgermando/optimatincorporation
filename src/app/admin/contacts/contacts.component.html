@@ -1,0 +1,44 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <div>
+      <h1>Messages</h1>
+      <p>Messages reçus via le formulaire de contact</p>
+    </div>
+  </div>
+
+  <div class="admin-table-wrapper card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Téléphone</th>
+          <th>Sujet</th>
+          <th>Message</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of items(); track c.id) {
+          <tr [class.unread]="!c.read">
+            <td><strong>{{ c.name }}</strong></td>
+            <td><a [href]="'mailto:' + c.email">{{ c.email }}</a></td>
+            <td>{{ c.phone || '—' }}</td>
+            <td>{{ c.subject }}</td>
+            <td class="cell-truncate">{{ c.message }}</td>
+            <td>{{ fmt(c.created_at ?? '') }}</td>
+            <td class="table-actions">
+              @if (!c.read) {
+                <button class="btn btn-ghost btn-sm" (click)="markRead(c.id!)">Lu</button>
+              }
+              <button class="btn btn-danger btn-sm" (click)="delete(c.id!)">Supprimer</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="7" class="text-center text-muted">Aucun message.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

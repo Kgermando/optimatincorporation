@@ -1,0 +1,37 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <div>
+      <h1>Utilisateurs</h1>
+      <p>Gérez les accès à l'administration</p>
+    </div>
+    <a routerLink="/admin/users/new" class="btn btn-primary">+ Nouvel utilisateur</a>
+  </div>
+
+  <div class="admin-table-wrapper card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Rôle</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (u of items(); track u.id) {
+          <tr>
+            <td>{{ u.name }}</td>
+            <td>{{ u.email }}</td>
+            <td><span class="badge badge-primary">{{ u.role }}</span></td>
+            <td class="table-actions">
+              <a [routerLink]="['/admin/users', u.id, 'edit']" class="btn btn-ghost btn-sm">Modifier</a>
+              <button class="btn btn-danger btn-sm" (click)="delete(u.id!)">Supprimer</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="text-center text-muted">Aucun utilisateur.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

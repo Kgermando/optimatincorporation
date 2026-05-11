@@ -1,0 +1,257 @@
+<!-- ======= HERO ======= -->
+<section class="hero">
+  <div class="hero__bg">
+    @for (img of heroImages; track $index) {
+      <div class="hero__slide" [class.active]="activeSlide() === $index"
+           [style.background-image]="'url(' + img + ')'"></div>
+    }
+    <div class="hero__overlay"></div>
+    <div class="hero__noise"></div>
+  </div>
+
+  <div class="container hero__content">
+    <div class="hero__eyebrow">
+      <span class="badge badge-primary">Studio d'Animation 3D • Kinshasa, RDC</span>
+    </div>
+
+    <h1 class="hero__title">
+      Le premier studio<br>
+      <span class="gradient-text">d'animation 3D</span><br>
+      en RDC
+    </h1>
+
+    <p class="hero__subtitle">
+      OPTIMAT Incorporation est un studio professionnel de composition et d'animation 3D
+      basé à Kinshasa. Nous donnons vie à vos idées grâce à des visuels de haute qualité
+      ancrés dans la culture africaine.
+    </p>
+
+    <div class="hero__actions">
+      <a routerLink="/realisations" class="btn btn-primary btn-lg">
+        Voir nos réalisations
+        <mat-icon>east</mat-icon>
+      </a>
+      <a routerLink="/contact" class="btn btn-outline btn-lg">Démarrer un projet</a>
+    </div>
+
+    <!-- Slide indicators -->
+    <div class="hero__indicators">
+      @for (img of heroImages; track $index) {
+        <button class="hero__dot" [class.active]="activeSlide() === $index"
+                (click)="activeSlide.set($index)"></button>
+      }
+    </div>
+  </div>
+
+  <!-- Scroll hint -->
+  <div class="hero__scroll">
+    <span>Défiler</span>
+    <div class="hero__scroll-line"></div>
+  </div>
+</section>
+
+<!-- ======= STATS ======= -->
+<section class="stats section--sm">
+  <div class="container">
+    <div class="stats__grid">
+      @for (stat of stats; track stat.label) {
+        <div class="stats__item" appReveal>
+          <span class="stats__value gradient-text">{{ stat.value }}</span>
+          <span class="stats__label">{{ stat.label }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ======= ABOUT ======= -->
+<section class="section about-home">
+  <div class="container">
+    <div class="about-home__grid">
+      <div class="about-home__visual" appReveal>
+        <div class="about-home__img-wrap">
+          <img src="/images/about.jpg" alt="OPTIMAT Studio" loading="lazy"
+               onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'600\' height=\'500\' viewBox=\'0 0 600 500\'><rect fill=\'%230e0e22\' width=\'600\' height=\'500\'/><text x=\'50%25\' y=\'50%25\' fill=\'%234a4a70\' font-size=\'20\' text-anchor=\'middle\' dy=\'.3em\'>OPTIMAT Studio</text></svg>'">
+          <div class="about-home__badge">
+            <span class="gradient-text">2016</span>
+            <span>Fondé à Kinshasa</span>
+          </div>
+        </div>
+        <div class="about-home__img-2">
+          <img src="/images/studio.jpg" alt="Studio" loading="lazy"
+               onerror="this.style.display='none'">
+        </div>
+      </div>
+
+      <div class="about-home__text">
+        <span class="section-label" appReveal>À Propos de Nous</span>
+        <h2 appReveal class="reveal-delay-1">Nous existons depuis 2016</h2>
+        <div class="accent-line" style="margin: 16px 0;"></div>
+
+        <p appReveal class="reveal-delay-2">
+          OPTIMAT Incorporation est un studio professionnel d'animation 3D de pointe basé à Kinshasa,
+          en République Démocratique du Congo. Fort d'une équipe d'experts passionnés, nous sommes
+          dédiés à la création de contenus visuels innovants et immersifs.
+        </p>
+        <p appReveal class="reveal-delay-3">
+          Depuis notre création, nous avons travaillé sur de nombreux projets allant des spots
+          publicitaires aux courts métrages, contribuant au développement de l'industrie créative en RDC.
+        </p>
+
+        <div class="about-home__values" appReveal class="reveal-delay-4">
+          @for (v of [['Mission', 'Donner vie à vos idées grâce à l\'animation 3D de haute qualité.'], ['Vision', 'Devenir le leader de l\'animation 3D en RDC et un acteur majeur en Afrique.'], ['Valeurs', 'Créativité, qualité, innovation, professionnalisme et engagement.']] ; track v[0]) {
+            <div class="about-home__value">
+              <strong>{{ v[0] }}</strong>
+              <span>{{ v[1] }}</span>
+            </div>
+          }
+        </div>
+
+        <a routerLink="/about" class="btn btn-primary" appReveal>
+          En savoir plus
+          <mat-icon>east</mat-icon>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= SERVICES ======= -->
+<section class="section services-home">
+  <div class="container">
+    <div class="section-header" appReveal>
+      <span class="section-label">Pourquoi nous choisir ?</span>
+      <h2>Nous offrons des services de haute qualité</h2>
+      <span class="accent-line"></span>
+      <p>
+        OPTIMAT Incorporation est votre partenaire de choix pour des animations 3D de qualité
+        supérieure, ancrées dans la culture africaine, réalisées par une équipe d'experts passionnés.
+      </p>
+    </div>
+
+    <div class="services-home__grid">
+      @for (service of services; track service.title; let i = $index) {
+        <div class="services-home__card card" appReveal [class]="'reveal-delay-' + ((i % 4) + 1)">
+          <div class="services-home__icon">{{ service.icon }}</div>
+          <h3>{{ service.title }}</h3>
+          <p>{{ service.desc }}</p>
+        </div>
+      }
+    </div>
+
+    <div class="section-cta" appReveal>
+      <a routerLink="/services" class="btn btn-outline">Voir tous nos services</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======= PORTFOLIO PREVIEW ======= -->
+<section class="section portfolio-preview">
+  <div class="container">
+    <div class="section-header" appReveal>
+      <span class="section-label">Nos Réalisations</span>
+      <h2>Nos projets les plus <span class="gradient-text">remarquables</span></h2>
+      <span class="accent-line"></span>
+      <p>Découvrez une sélection de nos meilleures productions d'animation 3D.</p>
+    </div>
+  </div>
+
+  <div class="portfolio-preview__grid">
+    @for (item of [
+      { img: '/images/portfolio-1.jpg', title: 'Koffi Raymet', cat: 'Série animée' },
+      { img: '/images/portfolio-2.jpg', title: 'Spot Publicitaire', cat: 'Animation 3D' },
+      { img: '/images/portfolio-3.jpg', title: 'Motion Graphics', cat: 'Corporate' },
+      { img: '/images/portfolio-4.jpg', title: 'Court-Métrage', cat: 'Film' }
+    ]; track item.title; let i = $index) {
+      <a [routerLink]="['/realisations']" class="portfolio-preview__item" appReveal [class]="'reveal-delay-' + (i + 1)">
+        <div class="portfolio-preview__img">
+          <img [src]="item.img" [alt]="item.title" loading="lazy"
+               onerror="this.parentElement.style.background='var(--color-surface-3)'">
+          <div class="portfolio-preview__overlay">
+            <span class="badge badge-secondary">{{ item.cat }}</span>
+            <h3>{{ item.title }}</h3>
+            <mat-icon class="portfolio-preview__icon">add_circle_outline</mat-icon>
+          </div>
+        </div>
+      </a>
+    }
+  </div>
+
+  <div class="container">
+    <div class="section-cta" appReveal>
+      <a routerLink="/realisations" class="btn btn-primary btn-lg">
+        Toutes nos réalisations
+        <mat-icon>east</mat-icon>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ======= OBJECTIVES ======= -->
+<section class="section objectives">
+  <div class="container">
+    <div class="objectives__inner">
+      <div class="objectives__header" appReveal>
+        <span class="section-label">Objectifs</span>
+        <h2>Objectifs principaux d'<span class="gradient-text">OPTIMAT Incorporation</span></h2>
+        <span class="accent-line" style="margin: 16px 0;"></span>
+        <p>
+          OPTIMAT Incorporation a pour objectif de devenir un acteur majeur de l'animation 3D
+          en RDC et à l'international, en valorisant la culture congolaise.
+        </p>
+      </div>
+
+      <div class="objectives__grid">
+        @for (obj of objectives; track obj.num) {
+          <div class="objectives__card" appReveal>
+            <span class="objectives__num gradient-text">{{ obj.num }}</span>
+            <h3>{{ obj.title }}</h3>
+            <p>{{ obj.desc }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= TESTIMONIAL ======= -->
+<section class="testimonial-home section--sm">
+  <div class="container">
+    <div class="testimonial-home__inner glass" appReveal>
+      <div class="testimonial-home__quote">
+        <mat-icon class="testimonial-home__quote-icon">format_quote</mat-icon>
+      </div>
+      <blockquote>
+        Nous avons été bluffés par la qualité du travail de OPTIMAT Incorporation.
+        Nos animations 3D sont d'un réalisme saisissant, les rendus sont impeccables et nous avons
+        livré des projets dans un délai record. OPTIMAT Incorporation a su donner vie à plusieurs
+        visions et a dépassé nos attentes. Nous recommandons vivement !
+      </blockquote>
+      <div class="testimonial-home__author">
+        <div class="testimonial-home__avatar"></div>
+        <div>
+          <strong>Fernando Nyembwe</strong>
+          <span>Directeur Général — OPTIMAT Incorporation</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= CTA ======= -->
+<section class="cta-home section--sm">
+  <div class="container">
+    <div class="cta-home__inner" appReveal>
+      <div class="cta-home__bg"></div>
+      <div class="cta-home__content">
+        <span class="section-label">Prêt à commencer ?</span>
+        <h2>Donnons vie à votre <span class="gradient-text">projet</span></h2>
+        <p>Contactez-nous pour discuter de votre vision et découvrir comment OPTIMAT peut la concrétiser.</p>
+        <div class="hero__actions">
+          <a routerLink="/contact" class="btn btn-primary btn-lg">Nous contacter</a>
+          <a routerLink="/realisations" class="btn btn-outline btn-lg">Voir le portfolio</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

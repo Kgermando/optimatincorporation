@@ -1,0 +1,126 @@
+<!-- Page Banner -->
+<div class="page-banner">
+  <div class="page-banner__bg"></div>
+  <div class="page-banner__content">
+    <span class="section-label">À Propos</span>
+    <h1>Nous existons depuis <span class="gradient-text">2016</span></h1>
+    <nav class="breadcrumb" aria-label="Fil d'Ariane">
+      <a routerLink="/">Accueil</a>
+      <span class="breadcrumb__sep">›</span>
+      <span>À Propos</span>
+    </nav>
+  </div>
+</div>
+
+<!-- Intro -->
+<section class="section">
+  <div class="container">
+    <div class="about-intro">
+      <div class="about-intro__text" appReveal>
+        <span class="section-label">Notre Histoire</span>
+        <h2>OPTIMAT Incorporation, le studio qui redéfinit l'animation 3D en Afrique</h2>
+        <div class="accent-line" style="margin: 20px 0;"></div>
+        <p>
+          OPTIMAT Incorporation est un studio professionnel d'animation 3D de pointe basé à Kinshasa,
+          en République Démocratique du Congo. Fort d'une équipe d'experts passionnés, nous sommes
+          dédiés à la création de contenus visuels innovants et immersifs.
+        </p>
+        <p>
+          Fondé à Kinshasa en 2016, OPTIMAT Incorporation est né de la passion d'une équipe de jeunes
+          talents pour l'animation 3D. Depuis, nous avons travaillé sur de nombreux projets, allant des
+          spots publicitaires aux courts métrages, en contribuant au développement de l'industrie créative en RDC.
+        </p>
+        <p>
+          Notre équipe est composée de passionnés d'animation 3D, de graphistes talentueux, et de
+          techniciens expérimentés, tous dévoués à la création de contenus visuels innovants.
+        </p>
+      </div>
+
+      <div class="about-intro__visual" appReveal class="reveal-delay-2">
+        <div class="about-intro__img">
+          <img src="/images/about.jpg" alt="OPTIMAT Studio" loading="lazy"
+               onerror="this.style.background='var(--color-surface-3)'">
+        </div>
+
+        <div class="about-intro__mvv">
+          <div class="about-intro__mvv-item">
+            <strong>Mission</strong>
+            <p>"Chez OPTIMAT Incorporation, notre mission est de donner vie à vos idées grâce à l'animation 3D de haute qualité, en mettant en valeur la créativité congolaise."</p>
+          </div>
+          <div class="about-intro__mvv-item">
+            <strong>Vision</strong>
+            <p>"Devenir le leader de l'animation 3D en RDC et un acteur majeur en Afrique, en produisant des contenus originaux et innovants."</p>
+          </div>
+          <div class="about-intro__mvv-item">
+            <strong>Valeurs</strong>
+            <p>"Créativité, qualité, innovation, professionnalisme, et engagement envers la promotion du talent local."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Values -->
+<section class="section" style="background: var(--color-surface);">
+  <div class="container">
+    <div class="section-header" appReveal>
+      <span class="section-label">Nos Valeurs</span>
+      <h2>Pourquoi choisir OPTIMAT ?</h2>
+      <span class="accent-line"></span>
+      <p>Nous offrons des services de haute qualité, ancrés dans la culture africaine.</p>
+    </div>
+
+    <div class="grid-4">
+      @for (value of values; track value.title; let i = $index) {
+        <div class="about-value card" appReveal [class]="'reveal-delay-' + (i + 1)">
+          <span class="about-value__icon">{{ value.icon }}</span>
+          <h3>{{ value.title }}</h3>
+          <p>{{ value.desc }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Timeline -->
+<section class="section">
+  <div class="container">
+    <div class="section-header" appReveal>
+      <span class="section-label">Notre Parcours</span>
+      <h2>Les étapes de notre <span class="gradient-text">croissance</span></h2>
+      <span class="accent-line"></span>
+    </div>
+
+    <div class="timeline">
+      @for (m of milestones; track m.year; let i = $index) {
+        <div class="timeline__item" [class.right]="i % 2 === 1" appReveal [class]="'reveal-delay-' + ((i % 3) + 1)">
+          <div class="timeline__content">
+            <span class="timeline__year gradient-text">{{ m.year }}</span>
+            <h3>{{ m.title }}</h3>
+            <p>{{ m.desc }}</p>
+          </div>
+          <div class="timeline__dot"></div>
+        </div>
+      }
+      <div class="timeline__line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section--sm" style="background: var(--color-surface);">
+  <div class="container">
+    <div class="cta-home__inner" appReveal style="background: var(--color-surface-2);">
+      <div class="cta-home__bg"></div>
+      <div class="cta-home__content">
+        <h2>Prêt à travailler avec nous ?</h2>
+        <p class="reveal">Rejoignez les nombreuses entreprises qui nous font confiance pour leurs projets visuels.</p>
+        <div class="hero__actions">
+          <a routerLink="/contact" class="btn btn-primary btn-lg">Nous contacter</a>
+          <a routerLink="/realisations" class="btn btn-outline btn-lg">Voir nos travaux</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,59 @@
+<!-- Page Banner -->
+<div class="page-banner">
+  <div class="page-banner__bg"></div>
+  <div class="page-banner__content">
+    <span class="section-label">Blog</span>
+    <h1>Actualités & <span class="gradient-text">Articles</span></h1>
+    <nav class="breadcrumb" aria-label="Fil d'Ariane">
+      <a routerLink="/">Accueil</a>
+      <span class="breadcrumb__sep">›</span>
+      <span>Blog</span>
+    </nav>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    @if (loading()) {
+      <div class="blog-grid">
+        @for (n of [1,2,3]; track n) {
+          <div class="skeleton" style="height: 400px; border-radius: 20px;"></div>
+        }
+      </div>
+    } @else {
+      <div class="blog-grid">
+        @for (post of posts(); track post.id; let i = $index) {
+          <article class="blog-card card" appReveal [class]="'reveal-delay-' + ((i % 3) + 1)">
+            <a [routerLink]="['/blog', post.slug]" class="blog-card__img">
+              <img [src]="post.cover_url" [alt]="post.title" loading="lazy"
+                   onerror="this.parentElement.style.background='var(--color-surface-3)'">
+              @if (post.category) {
+                <span class="badge badge-primary blog-card__cat">{{ post.category }}</span>
+              }
+            </a>
+            <div class="blog-card__body">
+              @if (post.created_at) {
+                <span class="blog-card__date">{{ formatDate(post.created_at) }}</span>
+              }
+              <h3>
+                <a [routerLink]="['/blog', post.slug]">{{ post.title }}</a>
+              </h3>
+              <p>{{ post.excerpt }}</p>
+              <div class="blog-card__footer">
+                @if (post.author) {
+                  <span class="blog-card__author">
+                    <mat-icon>person</mat-icon>
+                    {{ post.author }}
+                  </span>
+                }
+                <a [routerLink]="['/blog', post.slug]" class="blog-card__read">
+                  Lire la suite →
+                </a>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>

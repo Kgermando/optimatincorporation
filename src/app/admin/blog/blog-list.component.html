@@ -1,0 +1,39 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <div>
+      <h1>Blog</h1>
+      <p>Gérez vos articles</p>
+    </div>
+    <a routerLink="/admin/blog/new" class="btn btn-primary">+ Nouvel article</a>
+  </div>
+
+  <div class="admin-table-wrapper card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Catégorie</th>
+          <th>Auteur</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (b of items(); track b.id) {
+          <tr>
+            <td>{{ b.title }}</td>
+            <td><span class="badge badge-primary">{{ b.category }}</span></td>
+            <td>{{ b.author }}</td>
+            <td>{{ fmt(b.created_at) }}</td>
+            <td class="table-actions">
+              <a [routerLink]="['/admin/blog', b.id, 'edit']" class="btn btn-ghost btn-sm">Modifier</a>
+              <button class="btn btn-danger btn-sm" (click)="delete(b.id!)">Supprimer</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="5" class="text-center text-muted">Aucun article.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

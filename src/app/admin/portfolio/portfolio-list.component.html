@@ -1,0 +1,37 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <div>
+      <h1>Portfolio</h1>
+      <p>Gérez vos projets et réalisations</p>
+    </div>
+    <a routerLink="/admin/portfolio/new" class="btn btn-primary">+ Nouveau projet</a>
+  </div>
+
+  @if (loading()) {
+    <div class="skeleton" style="height:300px;border-radius:12px"></div>
+  } @else {
+    <div class="admin-table-wrapper card">
+      <table class="admin-table">
+        <thead>
+          <tr><th>Cover</th><th>Titre</th><th>Catégorie</th><th>Année</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          @for (item of items(); track item.id) {
+            <tr>
+              <td><img [src]="item.cover_url" [alt]="item.title" onerror="this.style.opacity='0'"></td>
+              <td>{{ item.title }}</td>
+              <td><span class="badge badge-primary">{{ item.category }}</span></td>
+              <td>{{ item.year }}</td>
+              <td class="table-actions">
+                <a [routerLink]="['/admin/portfolio', item.id, 'edit']" class="btn btn-ghost btn-sm">Modifier</a>
+                <button class="btn btn-danger btn-sm" (click)="delete(item.id!)">Supprimer</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="5" class="text-center text-muted">Aucun projet pour l'instant.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

@@ -1,0 +1,88 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h1>Dashboard</h1>
+    <p>Vue d'ensemble de votre contenu</p>
+  </div>
+
+  <div class="dashboard-stats">
+    <a routerLink="/admin/portfolio" class="stat-card">
+      <div class="stat-card__icon" style="--c:#6441ff">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <div class="stat-card__info">
+        <span class="stat-card__value">{{ stats().portfolio }}</span>
+        <span class="stat-card__label">Projets Portfolio</span>
+      </div>
+    </a>
+
+    <a routerLink="/admin/services" class="stat-card">
+      <div class="stat-card__icon" style="--c:#00c8ff">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+      </div>
+      <div class="stat-card__info">
+        <span class="stat-card__value">{{ stats().services }}</span>
+        <span class="stat-card__label">Services</span>
+      </div>
+    </a>
+
+    <a routerLink="/admin/team" class="stat-card">
+      <div class="stat-card__icon" style="--c:#f0c040">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="stat-card__info">
+        <span class="stat-card__value">{{ stats().team }}</span>
+        <span class="stat-card__label">Membres d'équipe</span>
+      </div>
+    </a>
+
+    <a routerLink="/admin/contacts" class="stat-card">
+      <div class="stat-card__icon" style="--c:#22c55e">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="stat-card__info">
+        <span class="stat-card__value">{{ stats().messages }}</span>
+        <span class="stat-card__label">Messages</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- Quick actions -->
+  <div class="dashboard-section">
+    <h2>Actions rapides</h2>
+    <div class="quick-actions">
+      <a routerLink="/admin/portfolio/new" class="btn btn-primary">+ Ajouter un projet</a>
+      <a routerLink="/admin/blog/new" class="btn btn-outline">+ Nouvel article</a>
+      <a routerLink="/admin/services/new" class="btn btn-outline">+ Nouveau service</a>
+      <a routerLink="/admin/team/new" class="btn btn-outline">+ Ajouter un membre</a>
+    </div>
+  </div>
+
+  <!-- Recent contacts -->
+  <div class="dashboard-section">
+    <div class="section-row">
+      <h2>Derniers messages</h2>
+      <a routerLink="/admin/contacts" class="btn btn-ghost">Voir tous →</a>
+    </div>
+    @if (recentContacts().length) {
+      <div class="admin-table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr><th>Nom</th><th>Email</th><th>Sujet</th><th>Date</th></tr>
+          </thead>
+          <tbody>
+            @for (c of recentContacts(); track c.id) {
+              <tr>
+                <td>{{ c.name }}</td>
+                <td>{{ c.email }}</td>
+                <td>{{ c.subject }}</td>
+                <td>{{ formatDate(c.created_at) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <p class="text-muted">Aucun message reçu.</p>
+    }
+  </div>
+</div>

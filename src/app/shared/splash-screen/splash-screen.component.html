@@ -1,0 +1,77 @@
+<div class="splash-overlay" [class.hiding]="isHiding">
+
+  <!-- ░░ Particules flottantes ░░ -->
+  <div class="particles">
+    <span
+      *ngFor="let p of particles"
+      class="particle"
+      [style.left.%]="p.x"
+      [style.top.%]="p.y"
+      [style.width.px]="p.size"
+      [style.height.px]="p.size"
+      [style.background]="p.color"
+      [style.animationDelay.s]="p.delay"
+      [style.animationDuration.s]="p.duration"
+    ></span>
+  </div>
+
+  <!-- ░░ Rayons lumineux en arrière-plan ░░ -->
+  <div class="bg-rays">
+    <div class="ray ray-1"></div>
+    <div class="ray ray-2"></div>
+    <div class="ray ray-3"></div>
+  </div>
+
+  <!-- ░░ Contenu central ░░ -->
+  <div class="splash-content">
+
+    <!-- Anneau orbital externe -->
+    <div class="orbit-ring orbit-outer"></div>
+    <div class="orbit-ring orbit-middle"></div>
+    <div class="orbit-ring orbit-inner"></div>
+
+    <!-- Points orbitaux animés -->
+    <div class="orbital-dot dot-1"></div>
+    <div class="orbital-dot dot-2"></div>
+    <div class="orbital-dot dot-3"></div>
+
+    <!-- ░░ Logo 3D ░░ -->
+    <div class="logo-stage">
+      <div class="logo-3d-wrapper">
+        <div class="logo-glow-backdrop"></div>
+        <img
+          src="/images/logo-icon.png"
+          alt="OPTIMAT"
+          class="logo-icon-3d"
+          draggable="false"
+        />
+        <div class="logo-reflection"></div>
+      </div>
+    </div>
+
+    <!-- ░░ Texte animé ░░ -->
+    <div class="brand-text">
+      <div class="brand-name">
+        <span
+          *ngFor="let letter of letters; let i = index"
+          class="brand-letter"
+          [class.space]="letter === ' '"
+          [style.animationDelay.ms]="600 + i * 60"
+        >{{ letter === ' ' ? '&nbsp;' : letter }}</span>
+      </div>
+      <div class="brand-tagline">Studio d'Animation 3D · Kinshasa, RDC</div>
+    </div>
+
+    <!-- ░░ Barre de progression ░░ -->
+    <div class="progress-wrapper">
+      <div class="progress-track">
+        <div class="progress-fill" [style.width]="progressWidth">
+          <div class="progress-glow"></div>
+        </div>
+      </div>
+      <span class="progress-pct">{{ progress | number:'1.0-0' }}%</span>
+    </div>
+
+  </div>
+
+</div>

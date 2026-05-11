@@ -1,0 +1,56 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h1>{{ isEdit ? "Modifier l'article" : 'Nouvel article' }}</h1>
+    <a routerLink="/admin/blog" class="btn btn-ghost">← Retour</a>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <form (ngSubmit)="save()" #f="ngForm" class="admin-form card">
+    <div class="form-group">
+      <label>Titre *</label>
+      <input class="form-control" [(ngModel)]="item.title" name="title" required>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Catégorie</label>
+        <input class="form-control" [(ngModel)]="item.category" name="category">
+      </div>
+      <div class="form-group">
+        <label>Auteur</label>
+        <input class="form-control" [(ngModel)]="item.author" name="author">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Résumé</label>
+      <textarea class="form-control" [(ngModel)]="item.excerpt" name="excerpt" rows="2"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Contenu (HTML)</label>
+      <textarea class="form-control" [(ngModel)]="item.content" name="content" rows="12"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Image de couverture</label>
+      <input type="file" class="form-control" accept="image/*" (change)="uploadCover($event)">
+      @if (uploading()) {
+        <small>Upload en cours...</small>
+      }
+      @if (item.cover_url) {
+        <img [src]="item.cover_url" class="form-preview-img">
+      }
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="f.invalid || loading()">
+        {{ loading() ? 'Enregistrement...' : 'Enregistrer' }}
+      </button>
+      <a routerLink="/admin/blog" class="btn btn-ghost">Annuler</a>
+    </div>
+  </form>
+</div>

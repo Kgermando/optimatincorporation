@@ -1,6 +1,6 @@
 {
   "name": "optimatincorporation",
-  "version": "0.0.0",
+  "version": "2.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -24,10 +24,12 @@
   "private": true,
   "packageManager": "npm@11.12.0",
   "dependencies": {
+    "@angular/animations": "^21.1.0",
     "@angular/common": "^21.1.0",
     "@angular/compiler": "^21.1.0",
     "@angular/core": "^21.1.0",
     "@angular/forms": "^21.1.0",
+    "@angular/material": "^21.2.10",
     "@angular/platform-browser": "^21.1.0",
     "@angular/platform-server": "^21.1.0",
     "@angular/router": "^21.1.0",

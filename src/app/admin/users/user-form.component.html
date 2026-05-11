@@ -1,0 +1,46 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h1>{{ isEdit ? "Modifier l'utilisateur" : 'Nouvel utilisateur' }}</h1>
+    <a routerLink="/admin/users" class="btn btn-ghost">← Retour</a>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <form (ngSubmit)="save()" #f="ngForm" class="admin-form card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nom *</label>
+        <input class="form-control" [(ngModel)]="item.name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" class="form-control" [(ngModel)]="item.email" name="email" required>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Rôle</label>
+        <select class="form-control" [(ngModel)]="item.role" name="role">
+          <option value="editor">Éditeur</option>
+          <option value="admin">Administrateur</option>
+        </select>
+      </div>
+      @if (!isEdit) {
+        <div class="form-group">
+          <label>Mot de passe *</label>
+          <input type="password" class="form-control" [(ngModel)]="password" name="password" required>
+        </div>
+      }
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="f.invalid || loading()">
+        {{ loading() ? 'Enregistrement...' : 'Enregistrer' }}
+      </button>
+      <a routerLink="/admin/users" class="btn btn-ghost">Annuler</a>
+    </div>
+  </form>
+</div>

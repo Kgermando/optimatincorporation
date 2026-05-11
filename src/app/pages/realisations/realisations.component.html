@@ -1,0 +1,75 @@
+<!-- Page Banner -->
+<div class="page-banner">
+  <div class="page-banner__bg"></div>
+  <div class="page-banner__content">
+    <span class="section-label">Portfolio</span>
+    <h1>Nos <span class="gradient-text">Réalisations</span></h1>
+    <nav class="breadcrumb" aria-label="Fil d'Ariane">
+      <a routerLink="/">Accueil</a>
+      <span class="breadcrumb__sep">›</span>
+      <span>Réalisations</span>
+    </nav>
+  </div>
+</div>
+
+<!-- Filters -->
+<section class="section--sm" style="background: var(--color-surface);">
+  <div class="container">
+    <div class="portfolio-filters" appReveal>
+      @for (filter of filters; track filter.value) {
+        <button class="portfolio-filter"
+                [class.active]="activeFilter() === filter.value"
+                (click)="setFilter(filter.value)">
+          {{ filter.label }}
+        </button>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Grid -->
+<section class="section">
+  <div class="container">
+    @if (loading()) {
+      <div class="portfolio-grid">
+        @for (n of [1,2,3,4,5,6]; track n) {
+          <div class="skeleton" style="height: 320px; border-radius: 16px;"></div>
+        }
+      </div>
+    } @else {
+      <div class="portfolio-grid">
+        @for (item of filtered(); track item.id; let i = $index) {
+          <a [routerLink]="['/realisations', item.id]" class="portfolio-item" appReveal [class]="'reveal-delay-' + ((i % 4) + 1)">
+            <div class="portfolio-item__img">
+              <img [src]="item.cover_url" [alt]="item.title" loading="lazy"
+                   onerror="this.parentElement.style.background='var(--color-surface-3)'">
+            </div>
+            <div class="portfolio-item__overlay">
+              <span class="badge badge-secondary">{{ getCategoryLabel(item.category!) }}</span>
+              <h3>{{ item.title }}</h3>
+              @if (item.year) {
+                <span class="portfolio-item__year">{{ item.year }}</span>
+              }
+              @if (item.tags.length) {
+                <div class="portfolio-item__tags">
+                  @for (tag of item.tags.slice(0, 2); track tag) {
+                    <span class="badge badge-primary">{{ tag }}</span>
+                  }
+                </div>
+              }
+              <div class="portfolio-item__icon">
+                <mat-icon>east</mat-icon>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+
+      @if (filtered().length === 0) {
+        <div class="portfolio-empty">
+          <p>Aucune réalisation dans cette catégorie pour le moment.</p>
+        </div>
+      }
+    }
+  </div>
+</section>

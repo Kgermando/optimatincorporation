@@ -1,0 +1,71 @@
+<div class="blog-detail-page">
+
+  @if (loading()) {
+    <div class="container section">
+      <div class="skeleton" style="height: 500px; border-radius: 20px;"></div>
+    </div>
+  } @else if (post()) {
+
+    <!-- Page Banner -->
+    <div class="page-banner">
+      <div class="page-banner__bg"></div>
+      <div class="page-banner__content">
+        @if (post()!.category) {
+          <span class="section-label">{{ post()!.category }}</span>
+        }
+        <h1>{{ post()!.title }}</h1>
+        <nav class="breadcrumb" aria-label="Fil d'Ariane">
+          <a routerLink="/">Accueil</a>
+          <span class="breadcrumb__sep">›</span>
+          <a routerLink="/blog">Blog</a>
+          <span class="breadcrumb__sep">›</span>
+          <span>Article</span>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Article content -->
+    <section class="section">
+      <div class="container blog-detail-container">
+
+        @if (post()!.cover_url) {
+          <div class="blog-detail-cover">
+            <img [src]="post()!.cover_url" [alt]="post()!.title" loading="eager">
+          </div>
+        }
+
+        <!-- Meta -->
+        <div class="blog-detail-meta">
+          @if (post()!.author) {
+            <span class="blog-detail-meta__item">
+              <mat-icon>person</mat-icon>
+              {{ post()!.author }}
+            </span>
+          }
+          @if (post()!.created_at) {
+            <span class="blog-detail-meta__item">
+              <mat-icon>calendar_today</mat-icon>
+              {{ post()!.created_at | date:'d MMMM yyyy' }}
+            </span>
+          }
+        </div>
+
+        <!-- Body -->
+        <div class="blog-content" [innerHTML]="post()!.content"></div>
+
+        <!-- Footer -->
+        <div class="blog-detail-footer">
+          <a routerLink="/blog" class="btn btn-outline">← Retour au blog</a>
+        </div>
+
+      </div>
+    </section>
+
+  } @else {
+    <div class="blog-detail-empty section">
+      <p>Article non trouvé.</p>
+      <a routerLink="/blog" class="btn btn-primary">Voir tous les articles</a>
+    </div>
+  }
+
+</div>

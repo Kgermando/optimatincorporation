@@ -1,12 +1,20 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { SplashScreenComponent } from './shared/splash-screen/splash-screen.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+  standalone: true,
+  imports: [RouterOutlet, CommonModule, SplashScreenComponent],
+  template: `
+    <app-splash-screen
+      *ngIf="showSplash"
+      (splashDone)="showSplash = false"
+    ></app-splash-screen>
+    <router-outlet *ngIf="!showSplash" />
+  `,
 })
 export class App {
-  protected readonly title = signal('optimatincorporation');
+  showSplash = true;
 }

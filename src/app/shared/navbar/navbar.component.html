@@ -1,0 +1,52 @@
+<nav class="navbar" [class.scrolled]="scrolled()">
+  <div class="container navbar__inner">
+    <!-- Logo desktop (logo.png) / mobile (logo-icon.png) -->
+    <a routerLink="/" class="navbar__logo" (click)="closeMenu()">
+      <img class="navbar__logo-full" src="/images/logo.png" alt="OPTIMAT Incorporation">
+      <img class="navbar__logo-icon" src="/images/logo-icon.png" alt="OPTIMAT">
+    </a>
+
+    <!-- Desktop Links -->
+    <ul class="navbar__links">
+      @for (link of links; track link.path) {
+        <li>
+          <a [routerLink]="link.path" routerLinkActive="active"
+             [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+             class="navbar__link">{{ link.label }}</a>
+        </li>
+      }
+    </ul>
+
+    <!-- CTA -->
+    <div class="navbar__actions">
+      <a routerLink="/contact" class="btn btn-primary btn-sm" (click)="closeMenu()">
+        Démarrer un projet
+      </a>
+
+      <!-- Hamburger -->
+      <button class="navbar__hamburger" (click)="toggleMenu()" [class.open]="menuOpen()" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="navbar__mobile" [class.open]="menuOpen()">
+    <ul>
+      @for (link of links; track link.path) {
+        <li>
+          <a [routerLink]="link.path" routerLinkActive="active"
+             [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+             (click)="closeMenu()">{{ link.label }}</a>
+        </li>
+      }
+      <li>
+        <a routerLink="/contact" class="btn btn-primary" (click)="closeMenu()">
+          Démarrer un projet
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

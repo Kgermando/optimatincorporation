@@ -1,0 +1,48 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h1>{{ isEdit ? 'Modifier le service' : 'Nouveau service' }}</h1>
+    <a routerLink="/admin/services" class="btn btn-ghost">← Retour</a>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <form (ngSubmit)="save()" #f="ngForm" class="admin-form card">
+    <div class="form-group">
+      <label>Titre *</label>
+      <input class="form-control" [(ngModel)]="item.title" name="title" required>
+    </div>
+
+    <div class="form-group">
+      <label>Sous-titre</label>
+      <input class="form-control" [(ngModel)]="item.subtitle" name="subtitle">
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea class="form-control" [(ngModel)]="item.description" name="description" rows="4"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Icône (nom)</label>
+      <input class="form-control" [(ngModel)]="item.icon" name="icon" placeholder="film">
+    </div>
+
+    <div class="form-group">
+      <label>Caractéristiques (une par ligne)</label>
+      <textarea class="form-control"
+                [ngModel]="featuresText()"
+                (ngModelChange)="setFeatures($event)"
+                name="features"
+                rows="4"></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="f.invalid || loading()">
+        {{ loading() ? 'Enregistrement...' : 'Enregistrer' }}
+      </button>
+      <a routerLink="/admin/services" class="btn btn-ghost">Annuler</a>
+    </div>
+  </form>
+</div>

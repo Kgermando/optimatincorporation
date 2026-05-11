@@ -1,0 +1,35 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <div>
+      <h1>Services</h1>
+      <p>Gérez les services proposés</p>
+    </div>
+    <a routerLink="/admin/services/new" class="btn btn-primary">+ Nouveau service</a>
+  </div>
+
+  <div class="admin-table-wrapper card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Sous-titre</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of items(); track s.id) {
+          <tr>
+            <td>{{ s.title }}</td>
+            <td>{{ s.subtitle }}</td>
+            <td class="table-actions">
+              <a [routerLink]="['/admin/services', s.id, 'edit']" class="btn btn-ghost btn-sm">Modifier</a>
+              <button class="btn btn-danger btn-sm" (click)="delete(s.id!)">Supprimer</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="3" class="text-center text-muted">Aucun service.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

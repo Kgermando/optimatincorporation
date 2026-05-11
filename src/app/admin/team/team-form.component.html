@@ -1,0 +1,70 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h1>{{ isEdit ? 'Modifier le membre' : 'Nouveau membre' }}</h1>
+    <a routerLink="/admin/team" class="btn btn-ghost">← Retour</a>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <form (ngSubmit)="save()" #f="ngForm" class="admin-form card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nom *</label>
+        <input class="form-control" [(ngModel)]="item.name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label>Poste *</label>
+        <input class="form-control" [(ngModel)]="item.position" name="position" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Bio</label>
+      <textarea class="form-control" [(ngModel)]="item.bio" name="bio" rows="3"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Photo</label>
+      <input type="file" class="form-control" accept="image/*" (change)="uploadPhoto($event)">
+      @if (uploading()) {
+        <small>Upload en cours...</small>
+      }
+      @if (item.photo_url) {
+        <img [src]="item.photo_url" class="form-preview-img">
+      }
+    </div>
+
+    <h3 class="form-section-title">Réseaux sociaux</h3>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Facebook</label>
+        <input class="form-control" [(ngModel)]="item.social_facebook" name="facebook">
+      </div>
+      <div class="form-group">
+        <label>Instagram</label>
+        <input class="form-control" [(ngModel)]="item.social_instagram" name="instagram">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>LinkedIn</label>
+        <input class="form-control" [(ngModel)]="item.social_linkedin" name="linkedin">
+      </div>
+      <div class="form-group">
+        <label>Ordre d'affichage</label>
+        <input type="number" class="form-control" [(ngModel)]="item.order" name="order">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="f.invalid || loading()">
+        {{ loading() ? 'Enregistrement...' : 'Enregistrer' }}
+      </button>
+      <a routerLink="/admin/team" class="btn btn-ghost">Annuler</a>
+    </div>
+  </form>
+</div>

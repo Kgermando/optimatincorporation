@@ -1,0 +1,95 @@
+<div class="detail-page">
+
+  <!-- Page Banner -->
+  <div class="page-banner">
+    <div class="page-banner__bg"></div>
+    <div class="page-banner__content">
+      @if (item()) {
+        <span class="section-label">{{ item()!.category }}</span>
+        <h1>{{ item()!.title }}</h1>
+      }
+      <nav class="breadcrumb" aria-label="Fil d'Ariane">
+        <a routerLink="/">Accueil</a>
+        <span class="breadcrumb__sep">›</span>
+        <a routerLink="/realisations">Réalisations</a>
+        <span class="breadcrumb__sep">›</span>
+        <span>Détail</span>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <section class="section">
+    <div class="container">
+
+      @if (loading()) {
+        <div class="detail-skeleton">
+          <div class="skeleton" style="height: 480px; border-radius: 20px; margin-bottom: 32px;"></div>
+          <div class="skeleton" style="height: 200px; border-radius: 12px;"></div>
+        </div>
+      } @else if (item()) {
+        <div class="detail-grid">
+
+          <!-- Main media -->
+          <div class="detail-main">
+            <div class="detail-cover">
+              <img [src]="item()!.cover_url" [alt]="item()!.title" loading="eager">
+            </div>
+
+            @if (item()!.gallery_urls.length) {
+              <div class="detail-gallery">
+                @for (url of item()!.gallery_urls; track url) {
+                  <div class="detail-gallery__item">
+                    <img [src]="url" [alt]="item()!.title" loading="lazy">
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Sidebar info -->
+          <aside class="detail-info">
+            <span class="section-label">{{ item()!.category }}</span>
+            <h2 class="detail-info__title">{{ item()!.title }}</h2>
+            <p class="detail-info__desc">{{ item()!.description }}</p>
+
+            <div class="detail-meta">
+              @if (item()!.client) {
+                <div class="detail-meta__row">
+                  <span class="detail-meta__label">Client</span>
+                  <span class="detail-meta__value">{{ item()!.client }}</span>
+                </div>
+              }
+              @if (item()!.year) {
+                <div class="detail-meta__row">
+                  <span class="detail-meta__label">Année</span>
+                  <span class="detail-meta__value">{{ item()!.year }}</span>
+                </div>
+              }
+            </div>
+
+            @if (item()!.tags.length) {
+              <div class="detail-tags">
+                @for (tag of item()!.tags; track tag) {
+                  <span class="badge badge-primary">{{ tag }}</span>
+                }
+              </div>
+            }
+
+            <div class="detail-info__actions">
+              <a routerLink="/realisations" class="btn btn-outline">← Retour au portfolio</a>
+            </div>
+          </aside>
+
+        </div>
+      } @else {
+        <div class="detail-empty">
+          <p>Projet non trouvé.</p>
+          <a routerLink="/realisations" class="btn btn-primary">Voir toutes les réalisations</a>
+        </div>
+      }
+
+    </div>
+  </section>
+
+</div>
