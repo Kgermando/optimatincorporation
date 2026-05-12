@@ -5,3 +5,25 @@
   border-radius: 8px;
   object-fit: cover;
 }
+
+.quill-editor-field {
+  display: block;
+
+  ::ng-deep .ql-toolbar {
+    border-radius: 6px 6px 0 0;
+    border-color: #d1d5db;
+    background: #f9fafb;
+  }
+
+  ::ng-deep .ql-container {
+    border-radius: 0 0 6px 6px;
+    border-color: #d1d5db;
+    min-height: 280px;
+    font-size: 1rem;
+  }
+
+  ::ng-deep .ql-editor {
+    min-height: 260px;
+    line-height: 1.6;
+  }
+}

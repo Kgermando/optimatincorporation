@@ -25,6 +25,12 @@
     border-radius: var(--radius-md);
     flex-shrink: 0;
     font-size: 1.6rem;
+
+    &-img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
   }
 
   h3 {

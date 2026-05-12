@@ -20,7 +20,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (c of items(); track c.id) {
+        @for (c of pagedItems(); track c.id) {
           <tr [class.unread]="!c.read">
             <td><strong>{{ c.name }}</strong></td>
             <td><a [href]="'mailto:' + c.email">{{ c.email }}</a></td>
@@ -40,5 +40,17 @@
         }
       </tbody>
     </table>
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <span class="pagination__info">{{ items().length }} message(s) — page {{ page() }} / {{ totalPages() }}</span>
+        <div class="pagination__controls">
+          <button class="pagination__btn" (click)="goTo(page() - 1)" [disabled]="page() === 1">‹</button>
+          @for (p of pages(); track p) {
+            <button class="pagination__btn" [class.active]="p === page()" (click)="goTo(p)">{{ p }}</button>
+          }
+          <button class="pagination__btn" (click)="goTo(page() + 1)" [disabled]="page() === totalPages()">›</button>
+        </div>
+      </div>
+    }
   </div>
 </div>

@@ -19,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (b of items(); track b.id) {
+        @for (b of pagedItems(); track b.id) {
           <tr>
             <td>{{ b.title }}</td>
             <td><span class="badge badge-primary">{{ b.category }}</span></td>
@@ -35,5 +35,17 @@
         }
       </tbody>
     </table>
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <span class="pagination__info">{{ items().length }} article(s) — page {{ page() }} / {{ totalPages() }}</span>
+        <div class="pagination__controls">
+          <button class="pagination__btn" (click)="goTo(page() - 1)" [disabled]="page() === 1">‹</button>
+          @for (p of pages(); track p) {
+            <button class="pagination__btn" [class.active]="p === page()" (click)="goTo(p)">{{ p }}</button>
+          }
+          <button class="pagination__btn" (click)="goTo(page() + 1)" [disabled]="page() === totalPages()">›</button>
+        </div>
+      </div>
+    }
   </div>
 </div>

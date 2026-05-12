@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit {
       this.portfolioService.getAll().toPromise(),
       this.servicesService.getAll().toPromise(),
       this.teamService.getAll().toPromise(),
-      this.contactService.getAll({ per_page: 5 }).toPromise()
+      this.contactService.getAll().toPromise()
     ]).then(([portfolio, services, team, contacts]) => {
       this.stats.set({
         portfolio: portfolio?.data?.length ?? 0,

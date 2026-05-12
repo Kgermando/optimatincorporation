@@ -43,8 +43,8 @@
           <div class="service-card card" appReveal [class]="'reveal-delay-' + ((i % 3) + 1)">
             <div class="service-card__header">
               <div class="service-card__icon">
-                @if (service.icon) {
-                  <span>{{ service.icon }}</span>
+                @if (service.icon_url) {
+                  <img [src]="service.icon_url" [alt]="service.title" class="service-card__icon-img">
                 } @else {
                   <mat-icon>layers</mat-icon>
                 }

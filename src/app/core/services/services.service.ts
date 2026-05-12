@@ -7,6 +7,7 @@ export class ServicesService {
   private api = inject(ApiService);
 
   getAll() { return this.api.get<Service[]>('services'); }
+  getOne(id: string) { return this.api.getOne<Service>('services', id); }
   getBySlug(slug: string) { return this.api.getOne<Service>('services', slug); }
   create(data: Partial<Service>) { return this.api.post<Service>('services', data); }
   update(id: string, data: Partial<Service>) { return this.api.put<Service>('services', id, data); }

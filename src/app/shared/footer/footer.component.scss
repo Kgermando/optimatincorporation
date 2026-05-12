@@ -116,6 +116,15 @@
       }
     }
   }
+
+  &__admin-link {
+    font-size: 0.75rem;
+    color: var(--color-text-subtle);
+    opacity: 0.4;
+    transition: opacity var(--transition-fast);
+
+    &:hover { opacity: 1; color: var(--color-primary-light); }
+  }
 }
 
 @media (max-width: 1024px) {

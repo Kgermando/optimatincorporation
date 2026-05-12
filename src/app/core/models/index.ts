@@ -51,7 +51,7 @@ export interface Service {
   title: string;
   subtitle?: string;
   description: string;
-  icon: string;
+  icon_url?: string;
   features: string[];
   order: number;
   published: boolean;
@@ -116,6 +116,13 @@ export interface ApiResponse<T> {
   total?: number;
   page?: number;
   per_page?: number;
+}
+
+export interface PaginationQuery {
+  page?: number;
+  per_page?: number;
+  category?: string;
+  [key: string]: string | number | boolean | undefined;
 }
 
 export interface PaginationQuery {

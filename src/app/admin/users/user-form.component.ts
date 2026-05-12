@@ -24,7 +24,7 @@ export class UserFormComponent implements OnInit {
   save(): void {
     if (!this.isEdit) this.item.password = this.password;
     this.loading.set(true);
-    const obs = this.isEdit ? this.userService.update(this.item.id!, this.item) : this.userService.create(this.item);
+    const obs = this.isEdit ? this.userService.update(this.item.id!, this.item) : this.userService.create({ ...this.item, password: this.password });
     obs.subscribe({ next: () => this.router.navigate(['/admin/users']), error: () => { this.error.set('Erreur.'); this.loading.set(false); } });
   }
 }

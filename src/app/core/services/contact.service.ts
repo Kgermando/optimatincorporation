@@ -6,8 +6,8 @@ import { ContactMessage } from '../models';
 export class ContactService {
   private api = inject(ApiService);
 
-  send(data: ContactMessage) { return this.api.post<void>('contact', data); }
-  getAll() { return this.api.get<ContactMessage[]>('contact'); }
-  markRead(id: string) { return this.api.put<void>('contact', id, { read: true }); }
-  delete(id: string) { return this.api.delete<void>('contact', id); }
+  send(data: ContactMessage) { return this.api.post<void>('contacts', data); }
+  getAll() { return this.api.get<ContactMessage[]>('contacts'); }
+  markRead(id: string) { return this.api.put<void>('contacts', `${id}/read`, {}); }
+  delete(id: string) { return this.api.delete<void>('contacts', id); }
 }

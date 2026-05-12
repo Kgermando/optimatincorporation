@@ -49,6 +49,7 @@ export const routes: Routes = [
       { path: 'contacts', loadComponent: () => import('./admin/contacts/contacts.component').then(m => m.ContactsComponent), title: 'Messages — Admin' },
       { path: 'users', loadComponent: () => import('./admin/users/users-list.component').then(m => m.UsersListComponent), title: 'Utilisateurs — Admin' },
       { path: 'users/new', loadComponent: () => import('./admin/users/user-form.component').then(m => m.UserFormComponent) },
+      { path: 'users/:id/edit', loadComponent: () => import('./admin/users/user-form.component').then(m => m.UserFormComponent) },
     ]
   },
 

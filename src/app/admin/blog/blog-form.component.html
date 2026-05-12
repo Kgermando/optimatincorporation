@@ -31,8 +31,17 @@
     </div>
 
     <div class="form-group">
-      <label>Contenu (HTML)</label>
-      <textarea class="form-control" [(ngModel)]="item.content" name="content" rows="12"></textarea>
+      <label>Contenu</label>
+      @if (isBrowser) {
+        <quill-editor
+          [(ngModel)]="item.content"
+          name="content"
+          [modules]="quillModules"
+          format="html"
+          class="quill-editor-field"
+          placeholder="Rédigez le contenu de l'article...">
+        </quill-editor>
+      }
     </div>
 
     <div class="form-group">
